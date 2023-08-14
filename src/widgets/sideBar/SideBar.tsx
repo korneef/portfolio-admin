@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-  List, ListItemButton, ListItemText, Drawer,
+  List, ListItemButton, ListItemText, Drawer, Divider,
 } from '@mui/material';
+import UserPanel from 'feautures/UserPanel/UserPanel';
 
 interface Props {
   drawerWidth: number,
@@ -16,6 +17,8 @@ function SideBar({ drawerWidth }: Props) {
       }}
       variant="permanent"
     >
+      <UserPanel />
+      <Divider />
       <List>
         {['Основная информация', 'Проекты', 'Фотографии', 'Справочники'].map((item) => (
           <ListItemButton key={item}>
