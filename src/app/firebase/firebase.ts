@@ -1,5 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import {
+  getDatabase, ref,
+} from 'firebase/database';
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -13,6 +16,8 @@ const app = initializeApp({
 
 const auth = getAuth(app);
 
-export { auth, app };
+const dbRef = ref(getDatabase(app));
+
+export { auth, app, dbRef };
 
 // TODO delete app from export if it's not needed

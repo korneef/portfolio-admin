@@ -2,6 +2,8 @@ import React, {
   createContext, useEffect, useMemo, useState,
 } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { Box } from '@mui/material';
+import PageLoader from '../../../widgets/PageLoader/PageLoader';
 
 interface IUser {
   displayName: string | null,
@@ -29,7 +31,6 @@ function UserProvider({ children }: React.PropsWithChildren) {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log('render userProvider');
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (authUser) => {
@@ -59,9 +60,23 @@ function UserProvider({ children }: React.PropsWithChildren) {
 
   return (
     <UserContext.Provider value={value}>
-      { isLoading ? <div>loading</div> : children }
+      {isLoading ? (
+        <Box sx={{
+          width: '100%',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+        }}
+        >
+          <PageLoader />
+        </Box>
+      ) : children}
     </UserContext.Provider>
   );
 }
 
 export default UserProvider;
+
+// TODO refactor file

@@ -16,7 +16,7 @@ function LeftMenuLayout() {
       >
         <SideBar drawerWidth={drawerWidth} />
       </Box>
-      <Box margin={2}>
+      <Box width="100%" margin={2}>
         <Outlet />
       </Box>
     </Box>
