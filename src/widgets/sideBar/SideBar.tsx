@@ -3,12 +3,28 @@ import {
   List, ListItemButton, ListItemText, Drawer, Divider,
 } from '@mui/material';
 import UserPanel from 'feautures/UserPanel/UserPanel';
+import { useNavigate } from 'react-router';
 
 interface Props {
   drawerWidth: number,
 }
 
 function SideBar({ drawerWidth }: Props) {
+  const navigate = useNavigate();
+
+  // TODO refactor this. Extract navItems and create navList component (widget)
+
+  const navItems = [
+    { displayName: 'Основная информация', navTo: 'main-info' },
+    { displayName: 'Проекты', navTo: 'projects' },
+    { displayName: 'Фотографии', navTo: 'photos' },
+    { displayName: 'Справочники', navTo: 'reference' },
+  ];
+
+  const handleClick = (navTo: string) => {
+    navigate(`/panel/${navTo}`);
+  };
+
   return (
     <Drawer
       sx={{
@@ -20,9 +36,9 @@ function SideBar({ drawerWidth }: Props) {
       <UserPanel />
       <Divider />
       <List>
-        {['Основная информация', 'Проекты', 'Фотографии', 'Справочники'].map((item) => (
-          <ListItemButton key={item}>
-            <ListItemText primary={item} />
+        {navItems.map((item) => (
+          <ListItemButton key={item.displayName} onClick={() => handleClick(item.navTo)}>
+            <ListItemText primary={item.displayName} />
           </ListItemButton>
         ))}
       </List>

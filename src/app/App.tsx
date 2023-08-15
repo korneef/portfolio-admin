@@ -3,9 +3,12 @@ import './App.css';
 import { Route, Routes } from 'react-router';
 import SignIn from '../pages/SignIn/SignIn';
 import UserProvider from './providers/userProvider/userProvider';
-import TestPage from '../pages/TestPage';
 import PrivateRoute from './providers/privateRouteProvider/PrivateRoute';
 import LeftMenuLayout from '../layouts/LeftMenuLayout/LeftMenuLayout';
+import PhotosPage from '../pages/Photos/PhotosPage';
+import MainInfoPage from '../pages/MainInfo/MainInfoPage';
+import ProjectsPage from '../pages/Projects/ProjectsPage';
+import ReferencePage from '../pages/Reference/ReferencePage';
 import '@mui/material';
 
 function App() {
@@ -16,7 +19,10 @@ function App() {
           {/* private */}
           <Route path="/" element={<PrivateRoute />}>
             <Route path="panel" element={<LeftMenuLayout />}>
-              <Route path="home" element={<TestPage />} />
+              <Route path="main-info" element={<MainInfoPage />} />
+              <Route path="photos" element={<PhotosPage />} />
+              <Route path="projects" element={<ProjectsPage />} />
+              <Route path="reference" element={<ReferencePage />} />
             </Route>
           </Route>
           {/* public */}

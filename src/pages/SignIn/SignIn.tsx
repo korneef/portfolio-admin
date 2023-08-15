@@ -25,7 +25,7 @@ export default function SignIn() {
             photoURL: autorizedUser.photoURL,
           },
         );
-        navigate('/panel/home');
+        navigate('/panel/main-info');
       }).catch((error) => {
         console.log(error);
       });
