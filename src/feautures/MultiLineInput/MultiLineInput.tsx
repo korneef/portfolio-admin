@@ -1,43 +1,24 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Box, IconButton, TextField } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DoneIcon from '@mui/icons-material/Done';
-import CancelIcon from '@mui/icons-material/Cancel';
+import React from 'react';
+import { Box, TextField } from '@mui/material';
+import IUserInfo from '../../models/userInfoModel';
+import ILangModel from '../../models/langModel';
 
 interface Props {
   value: string;
   placeholder: string;
+  handleChange: <T extends keyof IUserInfo, U extends keyof ILangModel>(
+    field: T,
+    language: U,
+    value: string
+  ) => void,
+  field: keyof IUserInfo,
+  language: keyof ILangModel,
+  disabled: boolean
 }
 
-function MultiLineInput({ value, placeholder }: Props) {
-  const [isEdit, setIsEdit] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
-
-  const handleEdit = () => {
-    setIsEdit(!isEdit);
-  };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const editButon = (
-    <IconButton onClick={handleEdit}>
-      <EditIcon />
-    </IconButton>
-  );
-
-  const saveAndDeleteButtons = (
-    <>
-      <IconButton onClick={handleEdit}>
-        <DoneIcon />
-      </IconButton>
-      <IconButton onClick={handleEdit}>
-        <CancelIcon />
-      </IconButton>
-    </>
-  );
-
+function MultiLineInput({
+  handleChange, placeholder, value, field, language, disabled,
+}: Props) {
   return (
     <Box
       sx={{
@@ -51,11 +32,10 @@ function MultiLineInput({ value, placeholder }: Props) {
         multiline
         placeholder={placeholder}
         label={placeholder}
-        value={inputValue}
-        disabled={!isEdit}
-        onChange={handleChange}
+        value={value}
+        disabled={disabled}
+        onChange={(e) => handleChange(field, language, e.target.value)}
       />
-      {isEdit ? saveAndDeleteButtons : editButon}
     </Box>
   );
 }

@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Box, IconButton, TextField,
+  Box, TextField,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DoneIcon from '@mui/icons-material/Done';
 import IUserInfo from '../../models/userInfoModel';
 import ILangModel from '../../models/langModel';
 
@@ -18,34 +15,12 @@ interface Props {
   ) => void,
   field: keyof IUserInfo,
   language: keyof ILangModel,
+  disabled: boolean
 }
 
 function SingleLineInput({
-  handleChange, placeholder, value, field, language,
+  handleChange, placeholder, value, field, language, disabled,
 }: Props) {
-  const [isEdit, setIsEdit] = useState(false);
-
-  const handleEdit = () => {
-    setIsEdit(!isEdit);
-  };
-
-  const editButton = (
-    <IconButton onClick={handleEdit}>
-      <EditIcon />
-    </IconButton>
-  );
-
-  const saveAndDeleteButtons = (
-    <>
-      <IconButton onClick={handleEdit}>
-        <DoneIcon />
-      </IconButton>
-      <IconButton onClick={handleEdit}>
-        <CancelIcon />
-      </IconButton>
-    </>
-  );
-
   return (
     <Box
       sx={{
@@ -59,10 +34,9 @@ function SingleLineInput({
         placeholder={placeholder}
         label={placeholder}
         value={value}
-        disabled={!isEdit}
+        disabled={disabled}
         onChange={(e) => handleChange(field, language, e.target.value)}
       />
-      {isEdit ? saveAndDeleteButtons : editButton}
     </Box>
   );
 }

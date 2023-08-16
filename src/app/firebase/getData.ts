@@ -1,7 +1,7 @@
 import { child, get } from 'firebase/database';
 import { dbRef } from './firebase';
 
-async function getData(path: string) {
+function getData(path: string) {
   return get(child(dbRef, path))
     .then((snapshot) => {
       if (snapshot.exists()) {
