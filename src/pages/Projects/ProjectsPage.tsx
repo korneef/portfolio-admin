@@ -12,19 +12,22 @@ import {
   Box,
   Chip,
   Stack,
-  IconButton,
+  IconButton, Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import getData from '../../app/firebase/getData';
 import IProject from '../../models/projectModel';
+import PageLoader from '../../widgets/PageLoader/PageLoader';
 
 function ProjectsPage() {
   const [projects, setProjects] = useState<Array<IProject>>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getData('/projects')
       .then((data) => {
         setProjects(data);
+        setIsLoading(false);
       });
   }, []);
 
@@ -34,7 +37,7 @@ function ProjectsPage() {
     </IconButton>
   );
 
-  return (
+  return isLoading ? (<PageLoader />) : (
     <Container sx={{ paddingTop: 5 }}>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
@@ -55,14 +58,26 @@ function ProjectsPage() {
               >
                 <TableCell component="th" scope="row">
                   <Stack>
-                    <Box>{row.name.ru}</Box>
-                    <Box>{row.name.en}</Box>
+                    <Box>
+                      <Typography color="gray" fontSize={12}>ru</Typography>
+                      {row.name.ru}
+                    </Box>
+                    <Box>
+                      <Typography color="gray" fontSize={12}>en</Typography>
+                      {row.name.en}
+                    </Box>
                   </Stack>
                 </TableCell>
                 <TableCell>
                   <Stack>
-                    <Box>{row.description.ru}</Box>
-                    <Box>{row.description.en}</Box>
+                    <Box>
+                      <Typography color="gray" fontSize={12}>ru</Typography>
+                      {row.description.ru}
+                    </Box>
+                    <Box>
+                      <Typography color="gray" fontSize={12}>en</Typography>
+                      {row.description.en}
+                    </Box>
                   </Stack>
                 </TableCell>
                 <TableCell>
