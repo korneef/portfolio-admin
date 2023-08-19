@@ -6,7 +6,7 @@ import UserProvider from './providers/userProvider/userProvider';
 import PrivateRoute from './providers/privateRouteProvider/PrivateRoute';
 import LeftMenuLayout from '../layouts/LeftMenuLayout/LeftMenuLayout';
 import PhotosPage from '../pages/Photos/PhotosPage';
-import MainInfoPage from '../pages/MainInfo/MainInfoPage';
+import UserInfoPage from '../pages/UserInfo/UserInfoPage';
 import ProjectsPage from '../pages/Projects/ProjectsPage';
 import ReferencePage from '../pages/Reference/ReferencePage';
 import '@mui/material';
@@ -19,7 +19,7 @@ function App() {
           {/* private */}
           <Route path="/" element={<PrivateRoute />}>
             <Route path="panel" element={<LeftMenuLayout />}>
-              <Route path="main-info" element={<MainInfoPage />} />
+              <Route path="main-info" element={<UserInfoPage />} />
               <Route path="photos" element={<PhotosPage />} />
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="reference" element={<ReferencePage />} />

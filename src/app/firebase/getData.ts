@@ -7,12 +7,8 @@ function getData(path: string) {
       if (snapshot.exists()) {
         return snapshot.val();
       }
-      console.log('No data');
       return null;
-    }).catch((error) => {
-      console.error(error);
-      return null;
-    });
+    }).catch(() => null);
 }
 
 export default getData;

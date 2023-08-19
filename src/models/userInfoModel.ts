@@ -1,4 +1,4 @@
-import ILangModel from "./langModel";
+import ILangModel from './langModel';
 
 interface IUserInfo {
   about: ILangModel,

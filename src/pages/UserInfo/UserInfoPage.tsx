@@ -9,28 +9,22 @@ import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SingleLineInput from '../../feautures/SingleLineInput/SingleLineInput';
 import MultiLineInput from '../../feautures/MultiLineInput/MultiLineInput';
-import getData from '../../app/firebase/getData';
-import writeUserData from '../../app/firebase/setData';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
 import IUserInfo from '../../models/userInfoModel';
 import ILangModel from '../../models/langModel';
-import userDataToArrayHelper from './userDataToArrayHelper';
+import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../app/store/slices/queryApi';
 
 // TODO refactor this component
 
-function MainInfoPage() {
-  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+function UserInfoPage() {
+  const { data = null, isLoading } = useGetUserInfoQuery('');
   const [isEdit, setIsEdit] = useState(false);
+  const [userInfo, setUserInfo] = useState(data);
+  const [updateUserInfo] = useUpdateUserInfoMutation();
 
   useEffect(() => {
-    getData('/userInfo')
-      .then((data) => {
-        setUserInfo(() => data);
-        setIsLoading(false);
-        console.log(userDataToArrayHelper(data));
-      });
-  }, []);
+    setUserInfo(data);
+  }, [data]);
 
   const handleChange = <T extends keyof IUserInfo, U extends keyof ILangModel>(
     field: T,
@@ -50,23 +44,15 @@ function MainInfoPage() {
   };
 
   const handleSave = () => {
-    writeUserData('/userInfo', userInfo)
-      .then(() => {
-        getData('/userInfo')
-          .then((data) => {
-            setUserInfo(() => data);
-            setIsEdit(false);
-          });
-      });
+    setIsEdit(false);
+    if (userInfo === null) return;
+    updateUserInfo(userInfo);
   };
 
   const handleEdit = () => {
     if (isEdit) {
-      getData('/userInfo')
-        .then((data) => {
-          setUserInfo(() => data);
-          setIsEdit(false);
-        });
+      setUserInfo(() => data);
+      setIsEdit(false);
     } else {
       setIsEdit(!isEdit);
     }
@@ -187,4 +173,4 @@ function MainInfoPage() {
   );
 }
 
-export default MainInfoPage;
+export default UserInfoPage;

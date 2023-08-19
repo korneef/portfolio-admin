@@ -1,13 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import projectReducer from './projectSlice';
+import { queryApi } from './slices/queryApi';
 
 export const store = configureStore({
   reducer: {
-    projects: projectReducer,
+    [queryApi.reducerPath]: queryApi.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(queryApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

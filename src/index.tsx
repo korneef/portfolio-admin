@@ -3,6 +3,8 @@ import './app/firebase/firebase';
 import { HashRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
+import { Provider } from 'react-redux';
+import { store } from './app/store/store';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 import '@fontsource/roboto/300.css';
@@ -16,9 +18,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    <Provider store={store}>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </Provider>
   </React.StrictMode>,
 );
 

@@ -18,7 +18,6 @@ export default function SignIn() {
       .then((result) => {
         const autorizedUser = result.user;
         user.addUser(
-          // eslint-disable-next-line max-len
           {
             displayName: autorizedUser.displayName,
             email: autorizedUser.email,
@@ -26,18 +25,14 @@ export default function SignIn() {
           },
         );
         navigate('/panel/main-info');
-      }).catch((error) => {
-        console.log(error);
+      }).catch(() => {
+        // TODO add error case
       });
-  };
-  const getUser = () => {
-    console.log(auth.currentUser);
   };
 
   return (
     <div className="sign-in">
       <Button variant="contained" onClick={onClickOnButton}>Авторизация</Button>
-      <Button variant="contained" onClick={getUser}>getUser</Button>
       <Button
         variant="contained"
         onClick={() => {

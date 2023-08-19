@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Container,
   Paper,
@@ -15,21 +15,12 @@ import {
   IconButton, Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import getData from '../../app/firebase/getData';
-import IProject from '../../models/projectModel';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
+import { useGetProjectsQuery } from '../../app/store/slices/queryApi';
 
 function ProjectsPage() {
-  const [projects, setProjects] = useState<Array<IProject>>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    getData('/projects')
-      .then((data) => {
-        setProjects(data);
-        setIsLoading(false);
-      });
-  }, []);
+  // TODO change params of useGetProjectsQuery
+  const { data: projects = [], isLoading } = useGetProjectsQuery('test');
 
   const editButton = (
     <IconButton>
