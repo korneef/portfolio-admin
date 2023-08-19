@@ -15,9 +15,17 @@ const app = initializeApp({
 });
 
 const auth = getAuth(app);
+const db = getDatabase(app);
 
-const dbRef = ref(getDatabase(app));
+const dbRef = ref(db);
+const projectRef = ref(db, 'projects');
+console.log(projectRef);
 
-export { auth, app, dbRef };
+export {
+  auth,
+  app,
+  dbRef,
+  projectRef,
+};
 
 // TODO delete app from export if it's not needed

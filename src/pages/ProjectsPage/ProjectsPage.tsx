@@ -15,18 +15,14 @@ import {
   IconButton, Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
 import { useGetProjectsQuery } from '../../app/store/slices/queryApi';
 
 function ProjectsPage() {
+  const navigate = useNavigate();
   // TODO change params of useGetProjectsQuery
   const { data: projects = [], isLoading } = useGetProjectsQuery('test');
-
-  const editButton = (
-    <IconButton>
-      <EditIcon />
-    </IconButton>
-  );
 
   return isLoading ? (<PageLoader />) : (
     <Container sx={{ paddingTop: 5 }}>
@@ -44,7 +40,7 @@ function ProjectsPage() {
           <TableBody>
             {projects.map((row) => (
               <TableRow
-                key={row.name.ru}
+                key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -80,7 +76,11 @@ function ProjectsPage() {
 
                 </TableCell>
                 <TableCell>{row.image}</TableCell>
-                <TableCell>{editButton}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => navigate(row.id)}>
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -92,7 +92,12 @@ function ProjectsPage() {
         justifyContent: 'flex-end',
       }}
       >
-        <Button variant="contained">Добавить проект</Button>
+        <Button
+          variant="contained"
+          onClick={() => navigate('new')}
+        >
+          Добавить проект
+        </Button>
       </Box>
     </Container>
   );

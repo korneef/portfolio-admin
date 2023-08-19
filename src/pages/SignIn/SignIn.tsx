@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  signInWithPopup, signOut, GoogleAuthProvider,
+  signInWithPopup, GoogleAuthProvider,
 } from 'firebase/auth';
 import { auth } from 'app/firebase/firebase';
 import { Button } from '@mui/material';
@@ -33,16 +33,6 @@ export default function SignIn() {
   return (
     <div className="sign-in">
       <Button variant="contained" onClick={onClickOnButton}>Авторизация</Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          signOut(auth).then(() => user.deleteUser());
-        }}
-      >
-        singOut
-      </Button>
     </div>
   );
 }
-
-// TODO refactor this page

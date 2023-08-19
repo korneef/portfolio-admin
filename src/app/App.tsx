@@ -7,9 +7,10 @@ import PrivateRoute from './providers/privateRouteProvider/PrivateRoute';
 import LeftMenuLayout from '../layouts/LeftMenuLayout/LeftMenuLayout';
 import PhotosPage from '../pages/Photos/PhotosPage';
 import UserInfoPage from '../pages/UserInfo/UserInfoPage';
-import ProjectsPage from '../pages/Projects/ProjectsPage';
+import ProjectsPage from '../pages/ProjectsPage/ProjectsPage';
 import ReferencePage from '../pages/Reference/ReferencePage';
 import '@mui/material';
+import ProjectPage from '../pages/ProjectPage/ProjectPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="main-info" element={<UserInfoPage />} />
               <Route path="photos" element={<PhotosPage />} />
               <Route path="projects" element={<ProjectsPage />} />
+              <Route path="projects/:id" element={<ProjectPage />} />
               <Route path="reference" element={<ReferencePage />} />
             </Route>
           </Route>
