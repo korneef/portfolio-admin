@@ -15,10 +15,10 @@ function SideBar({ drawerWidth }: Props) {
   // TODO refactor this. Extract navItems and create navList component (widget)
 
   const navItems = [
-    { displayName: 'Основная информация', navTo: 'main-info' },
+    { displayName: 'Основная информация', navTo: 'user-info' },
     { displayName: 'Проекты', navTo: 'projects' },
     { displayName: 'Фотографии', navTo: 'photos' },
-    { displayName: 'Справочники', navTo: 'reference' },
+    { displayName: 'Справочники', navTo: 'dictionaries' },
   ];
 
   const handleClick = (navTo: string) => {

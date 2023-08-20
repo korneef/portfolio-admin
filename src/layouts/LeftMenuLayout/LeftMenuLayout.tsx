@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import SideBar from 'widgets/sideBar/SideBar';
-import './LeftMenuLayout.scss';
 import { Box } from '@mui/material';
 
 function LeftMenuLayout() {

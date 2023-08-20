@@ -19,13 +19,15 @@ const db = getDatabase(app);
 
 const dbRef = ref(db);
 const projectRef = ref(db, 'projects');
-console.log(projectRef);
+const tagsRef = ref(db, 'dictionaries/tags');
 
 export {
+  db,
   auth,
   app,
   dbRef,
   projectRef,
+  tagsRef,
 };
 
 // TODO delete app from export if it's not needed
