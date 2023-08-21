@@ -26,7 +26,7 @@ export const queryApi = createApi({
             data.push({
               ...childData,
               id: childKey,
-              tags: [],
+              tags: childData.tags ? childData.tags : [],
             });
           });
           return { data, isError: false };

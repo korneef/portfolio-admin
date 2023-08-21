@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
+  Box,
   Button,
-  Card, CardContent, CardHeader, Container, IconButton, TextField,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Container,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select, SelectChangeEvent,
+  TextField,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { nanoid } from '@reduxjs/toolkit';
 import IProject from '../../models/projectModel';
 import ILangModel from '../../models/langModel';
-import { useCreateProjectMutation } from '../../app/store/slices/queryApi';
+import { useCreateProjectMutation, useGetTagsQuery } from '../../app/store/slices/queryApi';
 
 const defaultValues: IProject = {
   id: '',
@@ -20,17 +32,24 @@ const defaultValues: IProject = {
     ru: '',
     en: '',
   },
-  tags: ['qwe', '2', 'asdfasdf', 'asdf'],
+  tags: [],
   image: 'imageUrl',
 };
 
 function ProjectPage() {
   const [createProject] = useCreateProjectMutation();
+  const { data: tags = [] } = useGetTagsQuery('test');
+  const tagsDictionary = useMemo(() => {
+    const dictionary: Record<string, string> = {};
+    tags.forEach((tagData) => {
+      dictionary[tagData.id] = tagData.tag;
+    });
+    return dictionary;
+  }, [tags]);
   const navigate = useNavigate();
   const { id } = useParams();
   const isNew = id === 'new';
   const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
-  console.log(project);
 
   const handleChange = <T extends keyof Pick<IProject, 'name' | 'description'>, U extends keyof ILangModel>(
     field: T,
@@ -43,6 +62,17 @@ function ProjectPage() {
         ...prevState[field],
         [language]: value,
       },
+    }));
+  };
+
+  const handleChangeTag = (value: Array<string>) => {
+    const tagsId = value.map((tag) => {
+      const foundTag = tags.find((tagData) => tagData.tag === tag);
+      return foundTag ? foundTag.id : '';
+    });
+    setProject((prevState) => ({
+      ...prevState,
+      tags: tagsId,
     }));
   };
 
@@ -102,6 +132,36 @@ function ProjectPage() {
             value={project.description.en}
             onChange={(e) => handleChange('description', 'en', e.target.value)}
           />
+        </CardContent>
+        <CardContent>
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="multiple-chip-label">Tags</InputLabel>
+            <Select
+              labelId="multiple-chip-label"
+              id="multiple-chip"
+              multiple
+              onChange={(e: SelectChangeEvent<string[]>) => (
+                handleChangeTag(e.target.value as string[]))}
+              value={project.tags.map((tag) => tagsDictionary[tag])}
+              input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+            >
+              {tags.map(({ id: tagId, tag }) => (
+                <MenuItem
+                  key={tagId}
+                  value={tag}
+                >
+                  {tag}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </CardContent>
 
       </Card>

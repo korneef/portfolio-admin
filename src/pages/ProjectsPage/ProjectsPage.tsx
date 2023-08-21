@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Container,
   Paper,
@@ -17,12 +17,20 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
-import { useGetProjectsQuery } from '../../app/store/slices/queryApi';
+import { useGetProjectsQuery, useGetTagsQuery } from '../../app/store/slices/queryApi';
 
 function ProjectsPage() {
   const navigate = useNavigate();
   // TODO change params of useGetProjectsQuery
   const { data: projects = [], isLoading } = useGetProjectsQuery('test');
+  const { data: tags = [] } = useGetTagsQuery('test');
+  const tagsDictionary = useMemo(() => {
+    const dictionary: Record<string, string> = {};
+    tags.forEach((tagData) => {
+      dictionary[tagData.id] = tagData.tag;
+    });
+    return dictionary;
+  }, [tags]);
 
   return isLoading ? (<PageLoader />) : (
     <Container sx={{ paddingTop: 5 }}>
@@ -70,7 +78,7 @@ function ProjectsPage() {
                 <TableCell>
                   <Stack spacing={1} direction="row" flexWrap="wrap" useFlexGap>
                     {
-                      row.tags.map((item) => (<Chip key={item} label={item} />))
+                      row.tags.map((item) => <Chip key={item} label={tagsDictionary[item]} />)
                     }
                   </Stack>
 
