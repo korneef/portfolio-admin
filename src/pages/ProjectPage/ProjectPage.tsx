@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   Box,
@@ -20,7 +20,12 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { nanoid } from '@reduxjs/toolkit';
 import IProject from '../../models/projectModel';
 import ILangModel from '../../models/langModel';
-import { useCreateProjectMutation, useGetTagsQuery } from '../../app/store/slices/queryApi';
+import {
+  useCreateProjectMutation,
+  useGetOneProjectQuery,
+  useGetTagsQuery,
+  useUpdateProjectMutation,
+} from '../../app/store/slices/queryApi';
 
 const defaultValues: IProject = {
   id: '',
@@ -38,6 +43,7 @@ const defaultValues: IProject = {
 
 function ProjectPage() {
   const [createProject] = useCreateProjectMutation();
+  const [updateProject] = useUpdateProjectMutation();
   const { data: tags = [] } = useGetTagsQuery('test');
   const tagsDictionary = useMemo(() => {
     const dictionary: Record<string, string> = {};
@@ -48,8 +54,16 @@ function ProjectPage() {
   }, [tags]);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { data: downloadedProject } = useGetOneProjectQuery(id || '');
+  console.log(downloadedProject);
   const isNew = id === 'new';
   const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
+
+  useEffect(() => {
+    if (downloadedProject) {
+      setProject(downloadedProject);
+    }
+  }, [downloadedProject]);
 
   const handleChange = <T extends keyof Pick<IProject, 'name' | 'description'>, U extends keyof ILangModel>(
     field: T,
@@ -167,10 +181,15 @@ function ProjectPage() {
       </Card>
       <Button
         onClick={() => {
-          createProject(project)
-            .then(() => {
-              navigate('../projects');
-            });
+          if (isNew) {
+            createProject(project)
+              .then(() => {
+                navigate('../projects');
+              });
+          } else {
+            // TODO fix id || ''
+            updateProject([id || '', project]);
+          }
         }}
       >
         {isNew ? 'Добавить' : 'Сохранить'}

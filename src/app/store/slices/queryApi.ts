@@ -10,7 +10,7 @@ import IProject from '../../../models/projectModel';
 // TODO endpoints also should return errors
 export const queryApi = createApi({
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['UserInfo', 'Projects', 'Tags'],
+  tagTypes: ['UserInfo', 'Projects', 'OneProject', 'Tags'],
   endpoints: (build) => ({
 
     // Endpoints for PROJECTS
@@ -38,6 +38,24 @@ export const queryApi = createApi({
       providesTags: ['Projects'],
     }),
 
+    getOneProject: build.query({
+      async queryFn(projectId: string) {
+
+        try {
+          const snapshot = await get(child(dbRef, `projects/${projectId}`));
+
+          if (snapshot.exists()) {
+            return { data: snapshot.val(), isError: false };
+          } else {
+            return { data: null, isError: false };
+          }
+        } catch (e) {
+          return { data: null, isError: false };
+        }
+      },
+      providesTags: ['Projects'],
+    }),
+
     createProject: build.mutation<null, IProject>({
       async queryFn(arg: IProject) {
         try {
@@ -49,6 +67,21 @@ export const queryApi = createApi({
         }
       },
       invalidatesTags: ['Projects'],
+    }),
+
+    updateProject: build.mutation({
+      async queryFn(arg: [string, IProject]) {
+        const [projectId, project] = arg;
+        const projectsRef = ref(db, '/projects');
+        try {
+          // const newTagRef = await push(tagsRef);
+          await update(projectsRef, { [projectId]: project });
+          return { data: null, isError: false };
+        } catch (e) {
+          return { data: null, isError: true };
+        }
+      },
+      invalidatesTags: ['Projects', 'OneProject'],
     }),
 
     // Endpoints for USERS
@@ -147,6 +180,8 @@ export const queryApi = createApi({
 
 export const {
   useGetProjectsQuery,
+  useGetOneProjectQuery,
+  useUpdateProjectMutation,
   useGetUserInfoQuery,
   useUpdateUserInfoMutation,
   useCreateProjectMutation,
