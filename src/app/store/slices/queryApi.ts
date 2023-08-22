@@ -40,15 +40,13 @@ export const queryApi = createApi({
 
     getOneProject: build.query({
       async queryFn(projectId: string) {
-
         try {
           const snapshot = await get(child(dbRef, `projects/${projectId}`));
 
           if (snapshot.exists()) {
             return { data: snapshot.val(), isError: false };
-          } else {
-            return { data: null, isError: false };
           }
+          return { data: null, isError: false };
         } catch (e) {
           return { data: null, isError: false };
         }
