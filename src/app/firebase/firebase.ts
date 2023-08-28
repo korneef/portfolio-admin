@@ -3,6 +3,7 @@ import { getAuth } from 'firebase/auth';
 import {
   getDatabase, ref,
 } from 'firebase/database';
+import { getStorage } from 'firebase/storage';
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -20,6 +21,8 @@ const db = getDatabase(app);
 const dbRef = ref(db);
 const projectRef = ref(db, 'projects');
 const tagsRef = ref(db, 'dictionaries/tags');
+
+const storage = getStorage(app);
 
 export {
   db,

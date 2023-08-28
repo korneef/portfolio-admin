@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './App.css';
+import './App.scss';
 import {
   Route, Routes, useLocation, useNavigate,
 } from 'react-router';

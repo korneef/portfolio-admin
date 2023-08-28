@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   Box,
@@ -17,6 +19,7 @@ import {
   TextField,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { nanoid } from '@reduxjs/toolkit';
 import IProject from '../../models/projectModel';
 import ILangModel from '../../models/langModel';
@@ -26,6 +29,8 @@ import {
   useGetTagsQuery,
   useUpdateProjectMutation,
 } from '../../app/store/slices/queryApi';
+import EmptyImage from '../../share/assets/images/no-photo-icon.png';
+import './ProjectPage.scss';
 
 const defaultValues: IProject = {
   id: '',
@@ -55,9 +60,9 @@ function ProjectPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: downloadedProject } = useGetOneProjectQuery(id || '');
-  console.log(downloadedProject);
   const isNew = id === 'new';
   const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
+  const fileInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (downloadedProject) {
@@ -79,6 +84,11 @@ function ProjectPage() {
     }));
   };
 
+  const handleClickOnImage = () => {
+    if (!fileInput.current) return;
+    fileInput.current.click();
+  };
+
   const handleChangeTag = (value: Array<string>) => {
     const tagsId = value.map((tag) => {
       const foundTag = tags.find((tagData) => tagData.tag === tag);
@@ -89,6 +99,8 @@ function ProjectPage() {
       tags: tagsId,
     }));
   };
+
+  const cn = 'project-page-filepicker';
 
   return (
     <Container>
@@ -177,23 +189,51 @@ function ProjectPage() {
             </Select>
           </FormControl>
         </CardContent>
-
+        <CardContent>
+          <Card className={cn} sx={{ width: '200px' }}>
+            <IconButton sx={{ position: 'absolute' }} className={`${cn}__delete-button`}>
+              <DeleteForeverIcon />
+            </IconButton>
+            <button
+              type="button"
+              onClick={handleClickOnImage}
+              className={`${cn}__button`}
+            >
+              <img
+                className={`${cn}__image`}
+                src={EmptyImage}
+                alt="Изображение проекта"
+              />
+            </button>
+          </Card>
+          <input type="file" className={`${cn}__input`} ref={fileInput} />
+        </CardContent>
       </Card>
-      <Button
-        onClick={() => {
-          if (isNew) {
-            createProject(project)
-              .then(() => {
-                navigate('../projects');
-              });
-          } else {
-            // TODO fix id || ''
-            updateProject([id || '', project]);
-          }
-        }}
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: 3,
+      }}
       >
-        {isNew ? 'Добавить' : 'Сохранить'}
-      </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            if (isNew) {
+              createProject(project)
+                .then(() => {
+                  navigate('../projects');
+                });
+            } else {
+              // TODO fix id || ''
+              updateProject([id || '', project])
+                .then(() => alert('Проект сохранен успешно'))
+                .catch((err) => alert(`Ошибка сохранения: ${err}`));
+            }
+          }}
+        >
+          {isNew ? 'Добавить' : 'Сохранить'}
+        </Button>
+      </Box>
     </Container>
   );
 }
