@@ -7,7 +7,7 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
+  CardHeader, CardMedia,
   Chip,
   Container,
   FormControl,
@@ -19,6 +19,7 @@ import {
   TextField,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { nanoid } from '@reduxjs/toolkit';
 import IProject from '../../models/projectModel';
@@ -84,10 +85,12 @@ function ProjectPage() {
     }));
   };
 
-  const handleClickOnImage = () => {
+  const handleChangeImage = () => {
     if (!fileInput.current) return;
     fileInput.current.click();
   };
+
+  const handleDeleteImage = () => {};
 
   const handleChangeTag = (value: Array<string>) => {
     const tagsId = value.map((tag) => {
@@ -190,23 +193,39 @@ function ProjectPage() {
           </FormControl>
         </CardContent>
         <CardContent>
-          <Card className={cn} sx={{ width: '200px' }}>
-            <IconButton sx={{ position: 'absolute' }} className={`${cn}__delete-button`}>
-              <DeleteForeverIcon />
-            </IconButton>
-            <button
-              type="button"
-              onClick={handleClickOnImage}
-              className={`${cn}__button`}
-            >
-              <img
-                className={`${cn}__image`}
-                src={EmptyImage}
-                alt="Изображение проекта"
-              />
-            </button>
+          <Card className={cn} sx={{ width: '300px' }}>
+            <CardHeader
+              subheader="Изображение проекта"
+              action={(
+                <Box className={`${cn}__buttons-wrapper`}>
+                  <IconButton
+                    onClick={handleChangeImage}
+                    className={`${cn}__delete-button`}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleDeleteImage}
+                    className={`${cn}__delete-button`}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Box>
+              )}
+            />
+
+            <CardMedia
+              component="img"
+              alt="изображение проекта"
+              image={EmptyImage}
+            />
           </Card>
-          <input type="file" className={`${cn}__input`} ref={fileInput} />
+          <input
+            type="file"
+            className={`${cn}__input`}
+            ref={fileInput}
+            accept=".jpg,.jpeg,.png"
+          />
         </CardContent>
       </Card>
       <Box sx={{
