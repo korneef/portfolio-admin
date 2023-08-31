@@ -31,6 +31,7 @@ export {
   dbRef,
   projectRef,
   tagsRef,
+  storage,
 };
 
 // TODO delete app from export if it's not needed

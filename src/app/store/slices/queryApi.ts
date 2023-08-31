@@ -5,8 +5,8 @@ import {
 import {
   db, dbRef, tagsRef, projectRef,
 } from '../../firebase/firebase';
-import IUserInfo from '../../../models/userInfoModel';
 import IProject from '../../../models/projectModel';
+
 // TODO endpoints also should return errors
 export const queryApi = createApi({
   baseQuery: fakeBaseQuery(),
@@ -82,37 +82,6 @@ export const queryApi = createApi({
       invalidatesTags: ['Projects', 'OneProject'],
     }),
 
-    // Endpoints for USERS
-
-    getUserInfo: build.query({
-      async queryFn() {
-        try {
-          const snapshot = await get(child(dbRef, '/userInfo'));
-          if (snapshot.exists()) {
-            return { data: snapshot.val() as IUserInfo, isError: false };
-          }
-          return { data: null, isError: false };
-        } catch (error) {
-          return { data: null, isError: true };
-        }
-      },
-      providesTags: ['UserInfo'],
-    }),
-
-    updateUserInfo: build.mutation<null, IUserInfo>({
-      async queryFn(arg: IUserInfo) {
-        try {
-          await set(ref(db, '/userInfo'), {
-            ...arg,
-          });
-          return { data: null, isError: false };
-        } catch (err) {
-          return { data: null, isError: false };
-        }
-      },
-      invalidatesTags: ['UserInfo'],
-    }),
-
     // Endpoints for TAGS
 
     getTags: build.query({
@@ -180,8 +149,6 @@ export const {
   useGetProjectsQuery,
   useGetOneProjectQuery,
   useUpdateProjectMutation,
-  useGetUserInfoQuery,
-  useUpdateUserInfoMutation,
   useCreateProjectMutation,
   useGetTagsQuery,
   useCreateTagMutation,
