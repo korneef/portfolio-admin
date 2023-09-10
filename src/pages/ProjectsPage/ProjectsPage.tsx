@@ -41,7 +41,6 @@ function ProjectsPage() {
               <TableCell>Наименование</TableCell>
               <TableCell>Описание</TableCell>
               <TableCell>Тэги</TableCell>
-              <TableCell>Изображение</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -83,7 +82,6 @@ function ProjectsPage() {
                   </Stack>
 
                 </TableCell>
-                <TableCell>{row.image}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => navigate(row.id)}>
                     <EditIcon />

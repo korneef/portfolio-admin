@@ -15,7 +15,8 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Select, SelectChangeEvent,
+  Select,
+  SelectChangeEvent,
   TextField,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -32,6 +33,7 @@ import {
 } from '../../app/store/slices/queryApi';
 import EmptyImage from '../../share/assets/images/no-photo-icon.png';
 import './ProjectPage.scss';
+import PageLoader from '../../widgets/PageLoader/PageLoader';
 
 const defaultValues: IProject = {
   id: '',
@@ -44,13 +46,13 @@ const defaultValues: IProject = {
     en: '',
   },
   tags: [],
-  image: 'imageUrl',
 };
 
 function ProjectPage() {
   const [createProject] = useCreateProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
-  const { data: tags = [] } = useGetTagsQuery('test');
+  const [image, setImage] = useState(EmptyImage);
+  const { data: tags = [] } = useGetTagsQuery('');
   const tagsDictionary = useMemo(() => {
     const dictionary: Record<string, string> = {};
     tags.forEach((tagData) => {
@@ -60,14 +62,16 @@ function ProjectPage() {
   }, [tags]);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data: downloadedProject } = useGetOneProjectQuery(id || '');
+  const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
   const isNew = id === 'new';
   const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
   const fileInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (downloadedProject) {
-      setProject(downloadedProject);
+      setProject(downloadedProject.project);
+      if (!downloadedProject.image) return;
+      setImage(downloadedProject.image);
     }
   }, [downloadedProject]);
 
@@ -90,7 +94,12 @@ function ProjectPage() {
     fileInput.current.click();
   };
 
-  const handleDeleteImage = () => {};
+  const handleDeleteImage = () => {
+    if (fileInput.current) {
+      setImage(EmptyImage);
+      fileInput.current.value = '';
+    }
+  };
 
   const handleChangeTag = (value: Array<string>) => {
     const tagsId = value.map((tag) => {
@@ -103,157 +112,175 @@ function ProjectPage() {
     }));
   };
 
+  const changeImage = () => {
+    if (!fileInput?.current || !fileInput.current.files) return;
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(fileInput.current?.files[0]);
+    fileReader.onload = (event) => {
+      if (event.target === null) return;
+      if (typeof event.target.result !== 'string') return;
+      setImage(event.target.result);
+    };
+  };
+
   const cn = 'project-page-filepicker';
 
-  return (
-    <Container>
-      <Card>
-        <CardHeader
-          title={isNew ? 'Добавить проект' : 'Редактировать проект'}
-          action={(
-            <IconButton onClick={() => navigate('../projects')}>
-              <CancelIcon />
-            </IconButton>
+  return (isLoading
+    ? <PageLoader />
+    : (
+      <Container>
+        <Card>
+          <CardHeader
+            title={isNew ? 'Добавить проект' : 'Редактировать проект'}
+            action={(
+              <IconButton onClick={() => navigate('../projects')}>
+                <CancelIcon />
+              </IconButton>
           )}
-        />
-        <CardContent>
-          <TextField
-            sx={{
-              width: '100%',
-            }}
-            placeholder="Имя проекта"
-            label="Имя проекта на русском"
-            value={project.name.ru}
-            onChange={(e) => handleChange('name', 'ru', e.target.value)}
           />
-        </CardContent>
-        <CardContent>
-          <TextField
-            sx={{
-              width: '100%',
-            }}
-            placeholder="Name of project"
-            label="Имя проекта на английском"
-            value={project.name.en}
-            onChange={(e) => handleChange('name', 'en', e.target.value)}
-          />
-        </CardContent>
-        <CardContent>
-          <TextField
-            multiline
-            sx={{
-              width: '100%',
-            }}
-            placeholder="Проект создан с целью..."
-            label="Описание проекта на русском"
-            value={project.description.ru}
-            onChange={(e) => handleChange('description', 'ru', e.target.value)}
-          />
-        </CardContent>
-        <CardContent>
-          <TextField
-            multiline
-            sx={{
-              width: '100%',
-            }}
-            placeholder="This project can be..."
-            label="Описание проекта на английском"
-            value={project.description.en}
-            onChange={(e) => handleChange('description', 'en', e.target.value)}
-          />
-        </CardContent>
-        <CardContent>
-          <FormControl sx={{ width: '100%' }}>
-            <InputLabel id="multiple-chip-label">Tags</InputLabel>
-            <Select
-              labelId="multiple-chip-label"
-              id="multiple-chip"
-              multiple
-              onChange={(e: SelectChangeEvent<string[]>) => (
-                handleChangeTag(e.target.value as string[]))}
-              value={project.tags.map((tag) => tagsDictionary[tag])}
-              input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-            >
-              {tags.map(({ id: tagId, tag }) => (
-                <MenuItem
-                  key={tagId}
-                  value={tag}
-                >
-                  {tag}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </CardContent>
-        <CardContent>
-          <Card className={cn} sx={{ width: '300px' }}>
-            <CardHeader
-              subheader="Изображение проекта"
-              action={(
-                <Box className={`${cn}__buttons-wrapper`}>
-                  <IconButton
-                    onClick={handleChangeImage}
-                    className={`${cn}__delete-button`}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleDeleteImage}
-                    className={`${cn}__delete-button`}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </Box>
-              )}
+          <CardContent>
+            <TextField
+              sx={{
+                width: '100%',
+              }}
+              placeholder="Имя проекта"
+              label="Имя проекта на русском"
+              value={project.name.ru}
+              onChange={(e) => handleChange('name', 'ru', e.target.value)}
             />
+          </CardContent>
+          <CardContent>
+            <TextField
+              sx={{
+                width: '100%',
+              }}
+              placeholder="Name of project"
+              label="Имя проекта на английском"
+              value={project.name.en}
+              onChange={(e) => handleChange('name', 'en', e.target.value)}
+            />
+          </CardContent>
+          <CardContent>
+            <TextField
+              multiline
+              sx={{
+                width: '100%',
+              }}
+              placeholder="Проект создан с целью..."
+              label="Описание проекта на русском"
+              value={project.description.ru}
+              onChange={(e) => handleChange('description', 'ru', e.target.value)}
+            />
+          </CardContent>
+          <CardContent>
+            <TextField
+              multiline
+              sx={{
+                width: '100%',
+              }}
+              placeholder="This project can be..."
+              label="Описание проекта на английском"
+              value={project.description.en}
+              onChange={(e) => handleChange('description', 'en', e.target.value)}
+            />
+          </CardContent>
+          <CardContent>
+            <FormControl sx={{ width: '100%' }}>
+              <InputLabel id="multiple-chip-label">Tags</InputLabel>
+              <Select
+                labelId="multiple-chip-label"
+                id="multiple-chip"
+                multiple
+                onChange={(e: SelectChangeEvent<string[]>) => (
+                  handleChangeTag(e.target.value as string[]))}
+                value={project.tags.map((tag) => tagsDictionary[tag])}
+                input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value || nanoid()} label={value || 'deleted'} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {tags.map(({ id: tagId, tag }) => {
+                  console.log(tag);
+                  return (
+                    <MenuItem
+                      key={tagId}
+                      value={tag || 'deleted'}
+                    >
+                      {tag || 'deleted'}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </CardContent>
+          <CardContent>
+            <Card className={cn} sx={{ width: '300px' }}>
+              <CardHeader
+                subheader="Изображение проекта"
+                action={(
+                  <Box className={`${cn}__buttons-wrapper`}>
+                    <IconButton
+                      onClick={handleChangeImage}
+                      className={`${cn}__delete-button`}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={handleDeleteImage}
+                      className={`${cn}__delete-button`}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Box>
+              )}
+              />
 
-            <CardMedia
-              component="img"
-              alt="изображение проекта"
-              image={EmptyImage}
+              <CardMedia
+                component="img"
+                alt="изображение проекта"
+                image={image}
+              />
+            </Card>
+            <input
+              type="file"
+              className={`${cn}__input`}
+              ref={fileInput}
+              accept=".jpg,.jpeg,.png"
+              onChange={changeImage}
             />
-          </Card>
-          <input
-            type="file"
-            className={`${cn}__input`}
-            ref={fileInput}
-            accept=".jpg,.jpeg,.png"
-          />
-        </CardContent>
-      </Card>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginTop: 3,
-      }}
-      >
-        <Button
-          variant="contained"
-          onClick={() => {
-            if (isNew) {
-              createProject(project)
-                .then(() => {
-                  navigate('../projects');
-                });
-            } else {
-              // TODO fix id || ''
-              updateProject([id || '', project])
-                .then(() => alert('Проект сохранен успешно'))
-                .catch((err) => alert(`Ошибка сохранения: ${err}`));
-            }
-          }}
+          </CardContent>
+        </Card>
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginTop: 3,
+        }}
         >
-          {isNew ? 'Добавить' : 'Сохранить'}
-        </Button>
-      </Box>
-    </Container>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (isNew) {
+                createProject(project)
+                  .then(() => {
+                    navigate('../projects');
+                  });
+              } else {
+                // TODO fix id || ''
+                updateProject([id || '', project, image])
+                  .then(() => alert('Проект сохранен успешно'))
+                  .catch((err) => alert(`Ошибка сохранения: ${err}`));
+              }
+            }}
+          >
+            {isNew ? 'Добавить' : 'Сохранить'}
+          </Button>
+        </Box>
+      </Container>
+    )
   );
 }
 

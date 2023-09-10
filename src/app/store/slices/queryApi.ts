@@ -3,7 +3,14 @@ import {
   child, get, push, ref, set, update, remove,
 } from 'firebase/database';
 import {
-  db, dbRef, tagsRef, projectRef,
+  db,
+  dbRef,
+  tagsRef,
+  projectRef,
+  storage,
+  storageRef,
+  uploadString,
+  getDownloadURL,
 } from '../../firebase/firebase';
 import IProject from '../../../models/projectModel';
 
@@ -42,13 +49,30 @@ export const queryApi = createApi({
       async queryFn(projectId: string) {
         try {
           const snapshot = await get(child(dbRef, `projects/${projectId}`));
+          const projectImageRef = storageRef(storage, `projects/${projectId}/projectImage.jpg`);
+
+          const image = await getDownloadURL(projectImageRef)
+            .then((url) => fetch(url))
+            .then((res) => res.blob())
+            .then((blob) => URL.createObjectURL(blob))
+            .catch((err) => {
+              console.log(err);
+              return null;
+            });
+          console.log(image);
 
           if (snapshot.exists()) {
-            return { data: snapshot.val(), isError: false };
+            return {
+              data: {
+                project: snapshot.val(),
+                image,
+              },
+              isError: false,
+            };
           }
           return { data: null, isError: false };
         } catch (e) {
-          return { data: null, isError: false };
+          return { data: null, isError: true };
         }
       },
       providesTags: ['Projects'],
@@ -68,12 +92,15 @@ export const queryApi = createApi({
     }),
 
     updateProject: build.mutation({
-      async queryFn(arg: [string, IProject]) {
-        const [projectId, project] = arg;
+      async queryFn(arg: [string, IProject, string]) {
+        const [projectId, project, projectImage] = arg;
         const projectsRef = ref(db, '/projects');
+        const projectImageRef = storageRef(storage, `projects/${projectId}/projectImage.jpg`);
         try {
           // const newTagRef = await push(tagsRef);
           await update(projectsRef, { [projectId]: project });
+          await uploadString(projectImageRef, projectImage, 'data_url');
+
           return { data: null, isError: false };
         } catch (e) {
           return { data: null, isError: true };

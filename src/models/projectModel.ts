@@ -4,7 +4,6 @@ interface IProject {
   id: string;
   name: ILangModel,
   description: ILangModel,
-  image: string,
   tags: Array<string>
 }
 

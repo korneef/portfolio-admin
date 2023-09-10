@@ -1,7 +1,7 @@
-import { queryApi } from './queryApi';
 import {
   child, get, ref, set,
 } from 'firebase/database';
+import { queryApi } from './queryApi';
 import { db, dbRef } from '../../firebase/firebase';
 import IUserInfo from '../../../models/userInfoModel';
 

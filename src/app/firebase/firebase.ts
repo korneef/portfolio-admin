@@ -3,7 +3,9 @@ import { getAuth } from 'firebase/auth';
 import {
   getDatabase, ref,
 } from 'firebase/database';
-import { getStorage } from 'firebase/storage';
+import {
+  getStorage, ref as storageRef, uploadString, getDownloadURL,
+} from 'firebase/storage';
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -32,6 +34,9 @@ export {
   projectRef,
   tagsRef,
   storage,
+  storageRef,
+  uploadString,
+  getDownloadURL,
 };
 
 // TODO delete app from export if it's not needed
