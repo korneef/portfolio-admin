@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useMemo, useRef, useState,
+  useEffect, useMemo, useState,
 } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
@@ -7,7 +7,7 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader, CardMedia,
+  CardHeader,
   Chip,
   Container,
   FormControl,
@@ -20,8 +20,6 @@ import {
   TextField,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { nanoid } from '@reduxjs/toolkit';
 import IProject from '../../models/projectModel';
 import ILangModel from '../../models/langModel';
@@ -32,8 +30,8 @@ import {
   useUpdateProjectMutation,
 } from '../../app/store/slices/queryApi';
 import EmptyImage from '../../share/assets/images/no-photo-icon.png';
-import './ProjectPage.scss';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
+import ImagePicker from '../../widgets/ImageContainer/ImagePicker';
 
 const defaultValues: IProject = {
   id: '',
@@ -65,7 +63,6 @@ function ProjectPage() {
   const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
   const isNew = id === 'new';
   const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
-  const fileInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (downloadedProject) {
@@ -89,18 +86,6 @@ function ProjectPage() {
     }));
   };
 
-  const handleChangeImage = () => {
-    if (!fileInput.current) return;
-    fileInput.current.click();
-  };
-
-  const handleDeleteImage = () => {
-    if (fileInput.current) {
-      setImage(EmptyImage);
-      fileInput.current.value = '';
-    }
-  };
-
   const handleChangeTag = (value: Array<string>) => {
     const tagsId = value.map((tag) => {
       const foundTag = tags.find((tagData) => tagData.tag === tag);
@@ -111,19 +96,6 @@ function ProjectPage() {
       tags: tagsId,
     }));
   };
-
-  const changeImage = () => {
-    if (!fileInput?.current || !fileInput.current.files) return;
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(fileInput.current?.files[0]);
-    fileReader.onload = (event) => {
-      if (event.target === null) return;
-      if (typeof event.target.result !== 'string') return;
-      setImage(event.target.result);
-    };
-  };
-
-  const cn = 'project-page-filepicker';
 
   return (isLoading
     ? <PageLoader />
@@ -203,56 +175,18 @@ function ProjectPage() {
                   </Box>
                 )}
               >
-                {tags.map(({ id: tagId, tag }) => {
-                  console.log(tag);
-                  return (
-                    <MenuItem
-                      key={tagId}
-                      value={tag || 'deleted'}
-                    >
-                      {tag || 'deleted'}
-                    </MenuItem>
-                  );
-                })}
+                {tags.map(({ id: tagId, tag }) => (
+                  <MenuItem
+                    key={tagId}
+                    value={tag || 'deleted'}
+                  >
+                    {tag || 'deleted'}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </CardContent>
-          <CardContent>
-            <Card className={cn} sx={{ width: '300px' }}>
-              <CardHeader
-                subheader="Изображение проекта"
-                action={(
-                  <Box className={`${cn}__buttons-wrapper`}>
-                    <IconButton
-                      onClick={handleChangeImage}
-                      className={`${cn}__delete-button`}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={handleDeleteImage}
-                      className={`${cn}__delete-button`}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Box>
-              )}
-              />
-
-              <CardMedia
-                component="img"
-                alt="изображение проекта"
-                image={image}
-              />
-            </Card>
-            <input
-              type="file"
-              className={`${cn}__input`}
-              ref={fileInput}
-              accept=".jpg,.jpeg,.png"
-              onChange={changeImage}
-            />
-          </CardContent>
+          <ImagePicker setImage={setImage} defaultImage={EmptyImage} image={image} description="Изображение проекта" />
         </Card>
         <Box sx={{
           display: 'flex',
@@ -264,7 +198,7 @@ function ProjectPage() {
             variant="contained"
             onClick={() => {
               if (isNew) {
-                createProject(project)
+                createProject([project, image])
                   .then(() => {
                     navigate('../projects');
                   });

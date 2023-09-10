@@ -78,11 +78,20 @@ export const queryApi = createApi({
       providesTags: ['Projects'],
     }),
 
-    createProject: build.mutation<null, IProject>({
-      async queryFn(arg: IProject) {
+    createProject: build.mutation({
+      async queryFn(arg: [IProject, string]) {
+        const [project, projectImage] = arg;
         try {
           const newProjectRef = await push(projectRef);
-          await set(newProjectRef, { ...arg });
+          console.log(newProjectRef.key);
+          const projectImageRef = storageRef(
+            storage,
+            `projects/${newProjectRef.key}/projectImage.jpg`,
+          );
+
+          await uploadString(projectImageRef, projectImage, 'data_url');
+
+          await set(newProjectRef, { ...project });
           return { data: null, isError: false, isLoading: false };
         } catch (err) {
           return { data: null, isError: true, isLoading: false };
