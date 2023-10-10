@@ -72,7 +72,7 @@ function ProjectPage() {
     }
   }, [downloadedProject]);
 
-  const handleChange = <T extends keyof Pick<IProject, 'name' | 'description'>, U extends keyof ILangModel>(
+  const handleChangeWithLang = <T extends keyof Pick<IProject, 'name' | 'description'>, U extends keyof ILangModel>(
     field: T,
     language: U,
     value: string,
@@ -83,6 +83,16 @@ function ProjectPage() {
         ...prevState[field],
         [language]: value,
       },
+    }));
+  };
+
+  const handleChangeURL = <T extends keyof Pick<IProject, 'githubURL' | 'projectURL'>>(
+    field: T,
+    value: string,
+  ) => {
+    setProject((prevState) => ({
+      ...prevState,
+      [field]: value,
     }));
   };
 
@@ -118,7 +128,7 @@ function ProjectPage() {
               placeholder="Имя проекта"
               label="Имя проекта на русском"
               value={project.name.ru}
-              onChange={(e) => handleChange('name', 'ru', e.target.value)}
+              onChange={(e) => handleChangeWithLang('name', 'ru', e.target.value)}
             />
           </CardContent>
           <CardContent>
@@ -129,7 +139,7 @@ function ProjectPage() {
               placeholder="Name of project"
               label="Имя проекта на английском"
               value={project.name.en}
-              onChange={(e) => handleChange('name', 'en', e.target.value)}
+              onChange={(e) => handleChangeWithLang('name', 'en', e.target.value)}
             />
           </CardContent>
           <CardContent>
@@ -141,7 +151,7 @@ function ProjectPage() {
               placeholder="Проект создан с целью..."
               label="Описание проекта на русском"
               value={project.description.ru}
-              onChange={(e) => handleChange('description', 'ru', e.target.value)}
+              onChange={(e) => handleChangeWithLang('description', 'ru', e.target.value)}
             />
           </CardContent>
           <CardContent>
@@ -153,7 +163,31 @@ function ProjectPage() {
               placeholder="This project can be..."
               label="Описание проекта на английском"
               value={project.description.en}
-              onChange={(e) => handleChange('description', 'en', e.target.value)}
+              onChange={(e) => handleChangeWithLang('description', 'en', e.target.value)}
+            />
+          </CardContent>
+          <CardContent>
+            <TextField
+              multiline
+              sx={{
+                width: '100%',
+              }}
+              placeholder="https://..."
+              label="ссылка на github"
+              value={project.githubURL}
+              onChange={(e) => handleChangeURL('githubURL', e.target.value)}
+            />
+          </CardContent>
+          <CardContent>
+            <TextField
+              multiline
+              sx={{
+                width: '100%',
+              }}
+              placeholder="https://..."
+              label="ссылка на проект"
+              value={project.projectURL}
+              onChange={(e) => handleChangeURL('projectURL', e.target.value)}
             />
           </CardContent>
           <CardContent>
