@@ -13,17 +13,23 @@ import PageLoader from '../../widgets/PageLoader/PageLoader';
 import IUserInfo from '../../models/userInfoModel';
 import ILangModel from '../../models/langModel';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../app/store/slices/userInfoApi';
+import ImagePicker from '../../widgets/ImageContainer/ImagePicker';
+import EmptyImage from '../../share/assets/images/no-photo-icon.png';
 
 // TODO refactor this component
 
 function UserInfoPage() {
   const { data = null, isLoading } = useGetUserInfoQuery('');
   const [isEdit, setIsEdit] = useState(false);
-  const [userInfo, setUserInfo] = useState(data);
+  const [userInfo, setUserInfo] = useState(data?.user || null);
   const [updateUserInfo] = useUpdateUserInfoMutation();
+  const [image, setImage] = useState(EmptyImage);
 
   useEffect(() => {
-    setUserInfo(data);
+    if (data === null) return;
+    setUserInfo(data.user);
+    if (data.userImage === null) return;
+    setImage(data.userImage);
   }, [data]);
 
   const handleChange = <T extends keyof IUserInfo, U extends keyof ILangModel>(
@@ -31,6 +37,7 @@ function UserInfoPage() {
     language: U,
     value: string,
   ) => {
+    if (userInfo === undefined) return;
     setUserInfo((prevState) => {
       if (prevState === null) return null;
       return {
@@ -45,13 +52,14 @@ function UserInfoPage() {
 
   const handleSave = () => {
     setIsEdit(false);
-    if (userInfo === null) return;
-    updateUserInfo(userInfo);
+    if (userInfo === undefined || userInfo === null) return;
+    updateUserInfo([userInfo, image]);
   };
 
   const handleEdit = () => {
+    if (data === null || data === undefined) return;
     if (isEdit) {
-      setUserInfo(() => data);
+      setUserInfo(() => data.user);
       setIsEdit(false);
     } else {
       setIsEdit(!isEdit);
@@ -165,6 +173,9 @@ function UserInfoPage() {
                   field="summary"
                   disabled={!isEdit}
                 />
+              </Grid>
+              <Grid>
+                <ImagePicker image={image} defaultImage={EmptyImage} setImage={setImage} />
               </Grid>
             </Grid>
           </Card>

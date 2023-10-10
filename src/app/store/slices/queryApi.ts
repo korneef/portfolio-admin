@@ -59,7 +59,6 @@ export const queryApi = createApi({
               console.log(err);
               return null;
             });
-          console.log(image);
 
           if (snapshot.exists()) {
             return {
