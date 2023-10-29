@@ -19,6 +19,7 @@ function SideBar({ drawerWidth }: Props) {
     { displayName: 'Проекты', navTo: 'projects' },
     { displayName: 'Фотографии', navTo: 'photos' },
     { displayName: 'Справочники', navTo: 'dictionaries' },
+    { displayName: 'Резюме', navTo: 'cv' },
   ];
 
   const handleClick = (navTo: string) => {

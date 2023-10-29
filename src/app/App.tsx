@@ -13,6 +13,7 @@ import ProjectsPage from '../pages/ProjectsPage/ProjectsPage';
 import '@mui/material';
 import ProjectPage from '../pages/ProjectPage/ProjectPage';
 import Dictionaries from '../pages/Dictionaries/Dictionaries';
+import CVPage from '../pages/CVPage/CVPage';
 
 function App() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<PrivateRoute />}>
             <Route path="panel" element={<LeftMenuLayout />}>
               <Route index path="user-info" element={<UserInfoPage />} />
+              <Route path="cv" element={<CVPage />} />
               <Route path="photos" element={<PhotosPage />} />
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="projects/:id" element={<ProjectPage />} />

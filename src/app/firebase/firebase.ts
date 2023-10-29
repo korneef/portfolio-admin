@@ -4,7 +4,11 @@ import {
   getDatabase, ref,
 } from 'firebase/database';
 import {
-  getStorage, ref as storageRef, uploadString, getDownloadURL,
+  getStorage, ref as storageRef,
+  uploadString, getDownloadURL,
+  uploadBytes,
+  getMetadata,
+  deleteObject,
 } from 'firebase/storage';
 
 const app = initializeApp({
@@ -36,7 +40,10 @@ export {
   storage,
   storageRef,
   uploadString,
+  uploadBytes,
   getDownloadURL,
+  getMetadata,
+  deleteObject,
 };
 
 // TODO delete app from export if it's not needed

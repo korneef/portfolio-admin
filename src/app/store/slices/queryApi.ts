@@ -11,13 +11,15 @@ import {
   storageRef,
   uploadString,
   getDownloadURL,
+  uploadBytes,
+  deleteObject,
 } from '../../firebase/firebase';
 import IProject from '../../../models/projectModel';
 
 // TODO endpoints also should return errors
 export const queryApi = createApi({
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['UserInfo', 'Projects', 'OneProject', 'Tags'],
+  tagTypes: ['UserInfo', 'Projects', 'OneProject', 'Tags', 'CV'],
   endpoints: (build) => ({
 
     // Endpoints for PROJECTS
@@ -177,6 +179,59 @@ export const queryApi = createApi({
       },
       invalidatesTags: ['Tags'],
     }),
+
+    // CVes
+    getCVurl: build.query({
+      async queryFn(language: string) {
+        try {
+          const cvStorageRef = storageRef(storage, `CVs/${language}/Valentin_Korneev[frontend_developer].pdf`);
+          const downloadURL = await getDownloadURL(cvStorageRef);
+          return { data: downloadURL, isError: false, isLoading: false };
+        } catch (e) {
+          return { data: null, isError: true, isLoading: false };
+        }
+      },
+      providesTags: ['CV'],
+    }),
+
+    uploadCV: build.mutation({
+      async queryFn(arg: {
+        file: Blob,
+        language: 'ru' | 'en',
+        name: string;
+      }) {
+        try {
+          const cvStorageRef = storageRef(
+            storage,
+            `CVs/${arg.language}/${arg.name}.pdf`,
+          );
+          const newFile = await uploadBytes(cvStorageRef, arg.file);
+          return { data: newFile.metadata.name, isError: false, isLoading: false };
+        } catch (e) {
+          return { data: null, isError: true, isLoading: false };
+        }
+      },
+      invalidatesTags: ['CV'],
+    }),
+
+    deleteCV: build.mutation({
+      async queryFn(arg: {
+        language: 'ru' | 'en',
+        name: string;
+      }) {
+        try {
+          const cvStorageRef = storageRef(
+            storage,
+            `CVs/${arg.language}/${arg.name}.pdf`,
+          );
+          await deleteObject(cvStorageRef);
+          return { data: true, isError: false, isLoading: false };
+        } catch (e) {
+          return { data: null, isError: true, isLoading: false };
+        }
+      },
+      invalidatesTags: ['CV'],
+    }),
   }),
 });
 
@@ -189,4 +244,7 @@ export const {
   useCreateTagMutation,
   useUpdateTagMutation,
   useRemoveTagMutation,
+  useUploadCVMutation,
+  useGetCVurlQuery,
+  useDeleteCVMutation,
 } = queryApi;

@@ -50,19 +50,25 @@ function ProjectPage() {
   const [createProject] = useCreateProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
   const [image, setImage] = useState(EmptyImage);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
+  const isNew = id === 'new';
+  const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
   const { data: tags = [] } = useGetTagsQuery('');
   const tagsDictionary = useMemo(() => {
     const dictionary: Record<string, string> = {};
     tags.forEach((tagData) => {
       dictionary[tagData.id] = tagData.tag;
     });
+    if (project) {
+      project.tags.forEach((item) => {
+        if (!dictionary[item]) dictionary[item] = `deleted_${nanoid(4)}`;
+      });
+    }
     return dictionary;
-  }, [tags]);
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
-  const isNew = id === 'new';
-  const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
+  }, [project, tags]);
+  console.log(tagsDictionary);
 
   useEffect(() => {
     if (downloadedProject) {
@@ -204,17 +210,17 @@ function ProjectPage() {
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Chip key={value || nanoid()} label={value || 'deleted'} />
+                      <Chip key={nanoid()} label={value} />
                     ))}
                   </Box>
                 )}
               >
-                {tags.map(({ id: tagId, tag }) => (
+                {Object.entries(tagsDictionary).map(([tagId, tag]) => (
                   <MenuItem
                     key={tagId}
-                    value={tag || 'deleted'}
+                    value={tag}
                   >
-                    {tag || 'deleted'}
+                    {tag}
                   </MenuItem>
                 ))}
               </Select>
