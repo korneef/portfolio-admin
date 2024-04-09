@@ -20,15 +20,19 @@ import EmptyImage from '../../share/assets/images/no-photo-icon.png';
 
 function UserInfoPage() {
   const { data = null, isLoading } = useGetUserInfoQuery('');
+  const [updateUserInfo] = useUpdateUserInfoMutation();
+
   const [isEdit, setIsEdit] = useState(false);
   const [userInfo, setUserInfo] = useState(data?.user || null);
-  const [updateUserInfo] = useUpdateUserInfoMutation();
   const [image, setImage] = useState(EmptyImage);
 
   useEffect(() => {
     if (data === null) return;
+
     setUserInfo(data.user);
+
     if (data.userImage === null) return;
+
     setImage(data.userImage);
   }, [data]);
 
@@ -38,8 +42,10 @@ function UserInfoPage() {
     value: string,
   ) => {
     if (userInfo === undefined) return;
+
     setUserInfo((prevState) => {
       if (prevState === null) return null;
+
       return {
         ...prevState,
         [field]: {
@@ -52,12 +58,15 @@ function UserInfoPage() {
 
   const handleSave = () => {
     setIsEdit(false);
+
     if (userInfo === undefined || userInfo === null) return;
+
     updateUserInfo([userInfo, image]);
   };
 
   const handleEdit = () => {
     if (data === null || data === undefined) return;
+
     if (isEdit) {
       setUserInfo(() => data.user);
       setIsEdit(false);

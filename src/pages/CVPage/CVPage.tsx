@@ -8,14 +8,17 @@ import { useUploadCVMutation, useGetCVurlQuery, useDeleteCVMutation } from '../.
 function CvPage() {
   const [uploadCV] = useUploadCVMutation();
   const [deleteCV] = useDeleteCVMutation();
+
   const { data: ruCvUrl } = useGetCVurlQuery('ru');
   const { data: enCvUrl } = useGetCVurlQuery('en');
 
   // todo move language to type
   const handleInputChange = async (evt: React.ChangeEvent<HTMLInputElement>, language: 'ru' | 'en') => {
     if (evt.target.files === null) return;
+
     const cvFile = evt.target.files[0];
     const cvFileBlob = new Blob([cvFile], { type: cvFile.type });
+
     await uploadCV({
       file: cvFileBlob,
       language,

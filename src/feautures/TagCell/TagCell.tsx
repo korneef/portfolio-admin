@@ -14,10 +14,15 @@ interface Props {
 }
 
 function TagCell({ tag, id }: Props) {
-  const [value, setValue] = useState(tag);
-  const [isEdit, setIsEdit] = useState(false);
   const [updateTag] = useUpdateTagMutation();
   const [deleteTag] = useRemoveTagMutation();
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [value, setValue] = useState(tag);
+
+  const handleChange = (newValue: string) => {
+    setValue(newValue);
+  };
 
   const editButton = (
     <>
@@ -49,10 +54,6 @@ function TagCell({ tag, id }: Props) {
       </IconButton>
     </>
   );
-
-  const handleChange = (newValue: string) => {
-    setValue(newValue);
-  };
 
   return (
     <TableRow

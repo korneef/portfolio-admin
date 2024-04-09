@@ -21,14 +21,18 @@ import { useGetProjectsQuery, useGetTagsQuery } from '../../app/store/slices/que
 
 function ProjectsPage() {
   const navigate = useNavigate();
+
   // TODO change params of useGetProjectsQuery
   const { data: projects = [], isLoading } = useGetProjectsQuery('test');
   const { data: tags = [] } = useGetTagsQuery('test');
+
   const tagsDictionary = useMemo(() => {
     const dictionary: Record<string, string> = {};
+
     tags.forEach((tagData) => {
       dictionary[tagData.id] = tagData.tag;
     });
+
     return dictionary;
   }, [tags]);
 

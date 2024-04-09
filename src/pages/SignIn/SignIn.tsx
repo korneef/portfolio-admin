@@ -10,13 +10,14 @@ import { UserContext } from '../../app/providers/userProvider/userProvider';
 
 export default function SignIn() {
   const user = useContext(UserContext);
-  const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
 
-  const onClickOnButton = () => {
+  const handleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const autorizedUser = result.user;
+
         user.addUser(
           {
             displayName: autorizedUser.displayName,
@@ -32,7 +33,7 @@ export default function SignIn() {
 
   return (
     <div className="sign-in">
-      <Button variant="contained" onClick={onClickOnButton}>Авторизация</Button>
+      <Button variant="contained" onClick={handleLogin}>Авторизация</Button>
     </div>
   );
 }

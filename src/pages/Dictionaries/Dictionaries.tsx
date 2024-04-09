@@ -18,9 +18,12 @@ import AddNewTagModal from '../../feautures/AddNewTagModal/AddNewTagModal';
 function Dictionaries() {
   // TODO add type for tags array
   const { data: tags = [], isLoading } = useGetTagsQuery('test');
+
   const [newTagValue, setNewTagValue] = useState('');
   const [open, setOpen] = useState(false);
+
   const handleOpen = () => setOpen(true);
+
   const handleClose = () => {
     setOpen(false);
     setNewTagValue('');

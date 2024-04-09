@@ -9,6 +9,7 @@ import { auth } from '../../app/firebase/firebase';
 
 function UserPanel() {
   const { user, deleteUser } = useContext(UserContext);
+
   const photoURL = user?.photoURL === null || user === null ? undefined : user.photoURL;
 
   return (

@@ -26,22 +26,29 @@ function ImagePicker(props: Props) {
 
   const handleChangeImage = () => {
     if (!fileInput.current) return;
+
     fileInput.current.click();
   };
 
   const handleDeleteImage = () => {
     if (fileInput.current) {
       setImage(defaultImage);
+
       fileInput.current.value = '';
     }
   };
   const changeImage = () => {
     if (!fileInput?.current || !fileInput.current.files) return;
+
     const fileReader = new FileReader();
+
     fileReader.readAsDataURL(fileInput.current?.files[0]);
+
     fileReader.onload = (event) => {
       if (event.target === null) return;
+
       if (typeof event.target.result !== 'string') return;
+
       setImage(event.target.result);
     };
   };

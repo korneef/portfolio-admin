@@ -22,9 +22,7 @@ function SideBar({ drawerWidth }: Props) {
     { displayName: 'Резюме', navTo: 'cv' },
   ];
 
-  const handleClick = (navTo: string) => {
-    navigate(`/panel/${navTo}`);
-  };
+  const handleClick = (navTo: string) => navigate(`/panel/${navTo}`);
 
   return (
     <Drawer

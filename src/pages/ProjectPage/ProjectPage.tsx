@@ -47,36 +47,35 @@ const defaultValues: IProject = {
 };
 
 function ProjectPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [createProject] = useCreateProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
-  const [image, setImage] = useState(EmptyImage);
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
-  const isNew = id === 'new';
-  const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
+
   const { data: tags = [] } = useGetTagsQuery('');
+
+  const [image, setImage] = useState(EmptyImage);
+  const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
+
   const tagsDictionary = useMemo(() => {
     const dictionary: Record<string, string> = {};
+
     tags.forEach((tagData) => {
       dictionary[tagData.id] = tagData.tag;
     });
+
     if (project) {
       project.tags.forEach((item) => {
         if (!dictionary[item]) dictionary[item] = `deleted_${nanoid(4)}`;
       });
     }
+
     return dictionary;
   }, [project, tags]);
-  console.log(tagsDictionary);
 
-  useEffect(() => {
-    if (downloadedProject) {
-      setProject(downloadedProject.project);
-      if (!downloadedProject.image) return;
-      setImage(downloadedProject.image);
-    }
-  }, [downloadedProject]);
+  const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
+  const isNew = id === 'new';
 
   const handleChangeWithLang = <T extends keyof Pick<IProject, 'name' | 'description'>, U extends keyof ILangModel>(
     field: T,
@@ -105,13 +104,25 @@ function ProjectPage() {
   const handleChangeTag = (value: Array<string>) => {
     const tagsId = value.map((tag) => {
       const foundTag = tags.find((tagData) => tagData.tag === tag);
+
       return foundTag ? foundTag.id : '';
     });
+
     setProject((prevState) => ({
       ...prevState,
       tags: tagsId,
     }));
   };
+
+  useEffect(() => {
+    if (downloadedProject) {
+      setProject(downloadedProject.project);
+
+      if (!downloadedProject.image) return;
+
+      setImage(downloadedProject.image);
+    }
+  }, [downloadedProject]);
 
   return (isLoading
     ? <PageLoader />
