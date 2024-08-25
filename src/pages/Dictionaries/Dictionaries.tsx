@@ -20,17 +20,13 @@ function Dictionaries() {
   // TODO add type for tags array
   const { data: tags = [], isLoading } = useGetTagsQuery('test');
 
-  const [newTagValue, setNewTagValue] = useState('');
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => {
     setOpen(false);
-    setNewTagValue('');
   };
-
-  const handleChange = (newValue: string) => setNewTagValue(newValue);
 
   return isLoading ? (<PageLoader />) : (
     <Container sx={{ paddingTop: 5 }}>
@@ -63,8 +59,6 @@ function Dictionaries() {
         <AddNewTagModal
           open={open}
           handleClose={handleClose}
-          newTagValue={newTagValue}
-          handleChange={handleChange}
         />
       </Box>
     </Container>

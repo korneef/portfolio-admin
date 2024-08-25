@@ -1,35 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box, Button, Modal, TextField, Typography,
 } from '@mui/material';
+
 import { useCreateTagMutation } from '../../app/store/slices/queryApi';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '1px solid #000',
+  borderRadius: '5px',
+  boxShadow: 24,
+  p: 4,
+};
 
 interface Props {
   open: boolean,
   handleClose: () => void,
-  newTagValue: string,
-  handleChange: (value: string) => void,
 }
 
-// TODO refactor this component
-// TODO add close button
-
 function AddNewTagModal({
-  open, handleClose, newTagValue, handleChange,
+  open, handleClose,
 }: Props) {
-  const [createTag] = useCreateTagMutation();
+  const [createTag, { isLoading }] = useCreateTagMutation();
+  const [newTagName, setNewTagName] = useState('');
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
-    borderRadius: '5px',
-    boxShadow: 24,
-    p: 4,
+  const handleAddTag = async () => {
+    await createTag(newTagName);
+    handleClose();
   };
 
   return (
@@ -49,22 +52,28 @@ function AddNewTagModal({
           >
             <TextField
               fullWidth
-              value={newTagValue}
-              onChange={(e) => {
-                handleChange(e.target.value);
-              }}
+              value={newTagName}
+              onChange={(e) => setNewTagName(e.target.value)}
               label="Наиманование тэга"
             />
           </Box>
-          <Button
-            variant="contained"
-            onClick={() => {
-              createTag(newTagValue)
-                .then(() => handleClose());
-            }}
-          >
-            Добавить
-          </Button>
+          <Box sx={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <Button
+              onClick={handleClose}
+              variant="outlined"
+              disabled={isLoading}
+            >
+              Отмена
+            </Button>
+
+            <LoadingButton
+              variant="contained"
+              onClick={handleAddTag}
+              loading={isLoading}
+            >
+              Добавить
+            </LoadingButton>
+          </Box>
         </Box>
       </Box>
     </Modal>
