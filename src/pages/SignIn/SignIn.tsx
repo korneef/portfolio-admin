@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   signInWithPopup, GoogleAuthProvider,
 } from 'firebase/auth';
@@ -30,6 +30,10 @@ export default function SignIn() {
         // TODO add error case
       });
   };
+
+  useEffect(() => {
+    if (user.user) navigate('/panel/user-info');
+  }, []);
 
   return (
     <div className="sign-in">

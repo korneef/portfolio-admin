@@ -33,7 +33,6 @@ const storage = getStorage(app);
 export {
   db,
   auth,
-  app,
   dbRef,
   projectRef,
   tagsRef,
@@ -45,5 +44,3 @@ export {
   getMetadata,
   deleteObject,
 };
-
-// TODO delete app from export if it's not needed
