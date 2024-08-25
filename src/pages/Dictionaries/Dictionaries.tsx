@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+
 import TagCell from '../../feautures/TagCell/TagCell';
 import { useGetTagsQuery } from '../../app/store/slices/queryApi';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
@@ -29,9 +30,7 @@ function Dictionaries() {
     setNewTagValue('');
   };
 
-  const handleChange = (newValue: string) => {
-    setNewTagValue(newValue);
-  };
+  const handleChange = (newValue: string) => setNewTagValue(newValue);
 
   return isLoading ? (<PageLoader />) : (
     <Container sx={{ paddingTop: 5 }}>

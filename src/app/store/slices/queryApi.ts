@@ -166,6 +166,7 @@ export const queryApi = createApi({
       },
       invalidatesTags: ['Tags'],
     }),
+
     removeTag: build.mutation({
       // todo add type for these object
       async queryFn(arg: string) {
@@ -188,6 +189,7 @@ export const queryApi = createApi({
           const downloadURL = await getDownloadURL(cvStorageRef);
           return { data: downloadURL, isError: false, isLoading: false };
         } catch (e) {
+          console.log(language);
           return { data: null, isError: true, isLoading: false };
         }
       },

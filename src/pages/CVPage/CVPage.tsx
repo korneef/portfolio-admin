@@ -3,6 +3,7 @@ import {
   Button, Container, Link, TableBody, TableCell, TableRow,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 import { useUploadCVMutation, useGetCVurlQuery, useDeleteCVMutation } from '../../app/store/slices/queryApi';
 
 function CvPage() {
