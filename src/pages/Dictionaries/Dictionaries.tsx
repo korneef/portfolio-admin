@@ -17,16 +17,13 @@ import PageLoader from '../../widgets/PageLoader/PageLoader';
 import AddNewTagModal from '../../feautures/AddNewTagModal/AddNewTagModal';
 
 function Dictionaries() {
-  // TODO add type for tags array
-  const { data: tags = [], isLoading } = useGetTagsQuery('test');
+  const { data: tags = [], isLoading } = useGetTagsQuery({});
 
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
 
   return isLoading ? (<PageLoader />) : (
     <Container sx={{ paddingTop: 5 }}>

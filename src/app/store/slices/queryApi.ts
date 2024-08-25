@@ -15,6 +15,7 @@ import {
   deleteObject,
 } from '../../firebase/firebase';
 import IProject from '../../../models/projectModel';
+import ITagModel from '../../../models/tagModel';
 
 // TODO endpoints also should return errors
 export const queryApi = createApi({
@@ -122,15 +123,18 @@ export const queryApi = createApi({
     // Endpoints for TAGS
 
     getTags: build.query({
-      async queryFn() {
+      queryFn: async () => {
         try {
-          const data: Array<{ tag: string, id: string }> = [];
+          const data: Array<ITagModel> = [];
+
           const snapshot = await get(tagsRef);
+
           snapshot.forEach((childSnapshot) => {
             const childKey = childSnapshot.key;
             const childData = childSnapshot.val();
             data.push({ tag: childData, id: childKey });
           });
+
           return { data, isError: false };
         } catch (error) {
           return { data: [], isError: true };
