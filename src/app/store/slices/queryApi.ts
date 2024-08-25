@@ -84,7 +84,7 @@ export const queryApi = createApi({
         const [project, projectImage] = arg;
         try {
           const newProjectRef = await push(projectRef);
-          console.log(newProjectRef.key);
+
           const projectImageRef = storageRef(
             storage,
             `projects/${newProjectRef.key}/projectImage.jpg`,
@@ -133,7 +133,6 @@ export const queryApi = createApi({
           });
           return { data, isError: false };
         } catch (error) {
-          console.log(error);
           return { data: [], isError: true };
         }
       },
@@ -189,7 +188,6 @@ export const queryApi = createApi({
           const downloadURL = await getDownloadURL(cvStorageRef);
           return { data: downloadURL, isError: false, isLoading: false };
         } catch (e) {
-          console.log(language);
           return { data: null, isError: true, isLoading: false };
         }
       },
