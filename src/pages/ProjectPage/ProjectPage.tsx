@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useMemo, useState,
-} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   Box,
@@ -17,7 +15,6 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
-  TextField,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { nanoid } from '@reduxjs/toolkit';
@@ -32,19 +29,8 @@ import {
 import EmptyImage from '../../share/assets/images/no-photo-icon.png';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
 import ImagePicker from '../../widgets/ImageContainer/ImagePicker';
-
-const defaultValues: IProject = {
-  id: '',
-  name: {
-    ru: '',
-    en: '',
-  },
-  description: {
-    ru: '',
-    en: '',
-  },
-  tags: [],
-};
+import ProjectTextFields from './components/ProjectTextFields';
+import DEFAULT_PROJECT_VALUES from './constants';
 
 function ProjectPage() {
   const { id } = useParams();
@@ -56,23 +42,24 @@ function ProjectPage() {
   const { data: tags = [] } = useGetTagsQuery('');
 
   const [image, setImage] = useState(EmptyImage);
-  const [project, setProject] = useState<IProject>({ ...defaultValues, id: nanoid() });
+  const [project, setProject] = useState<IProject>({ ...DEFAULT_PROJECT_VALUES, id: nanoid() });
 
   const tagsDictionary = useMemo(() => {
-    const dictionary: Record<string, string> = {};
+    const dictionary = tags.reduce<Record<string, string>>((acc, { id: tagId, tag }) => {
+      acc[tagId] = tag;
+      return acc;
+    }, {});
 
-    tags.forEach((tagData) => {
-      dictionary[tagData.id] = tagData.tag;
+    project?.tags.forEach((item) => {
+      if (!dictionary[item]) {
+        dictionary[item] = `deleted_${nanoid(4)}`;
+      }
     });
-
-    if (project) {
-      project.tags.forEach((item) => {
-        if (!dictionary[item]) dictionary[item] = `deleted_${nanoid(4)}`;
-      });
-    }
 
     return dictionary;
   }, [project, tags]);
+
+  const selectedTags = project.tags.map((tag) => tagsDictionary[tag]);
 
   const { data: downloadedProject, isLoading } = useGetOneProjectQuery(id || '');
   const isNew = id === 'new';
@@ -115,13 +102,11 @@ function ProjectPage() {
   };
 
   useEffect(() => {
-    if (downloadedProject) {
-      setProject(downloadedProject.project);
+    if (!downloadedProject) return;
 
-      if (!downloadedProject.image) return;
+    setProject(downloadedProject.project);
 
-      setImage(downloadedProject.image);
-    }
+    if (downloadedProject.image) setImage(downloadedProject.image);
   }, [downloadedProject]);
 
   return (isLoading
@@ -135,78 +120,15 @@ function ProjectPage() {
               <IconButton onClick={() => navigate('../projects')}>
                 <CancelIcon />
               </IconButton>
-          )}
+            )}
           />
-          <CardContent>
-            <TextField
-              sx={{
-                width: '100%',
-              }}
-              placeholder="Имя проекта"
-              label="Имя проекта на русском"
-              value={project.name.ru}
-              onChange={(e) => handleChangeWithLang('name', 'ru', e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <TextField
-              sx={{
-                width: '100%',
-              }}
-              placeholder="Name of project"
-              label="Имя проекта на английском"
-              value={project.name.en}
-              onChange={(e) => handleChangeWithLang('name', 'en', e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <TextField
-              multiline
-              sx={{
-                width: '100%',
-              }}
-              placeholder="Проект создан с целью..."
-              label="Описание проекта на русском"
-              value={project.description.ru}
-              onChange={(e) => handleChangeWithLang('description', 'ru', e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <TextField
-              multiline
-              sx={{
-                width: '100%',
-              }}
-              placeholder="This project can be..."
-              label="Описание проекта на английском"
-              value={project.description.en}
-              onChange={(e) => handleChangeWithLang('description', 'en', e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <TextField
-              multiline
-              sx={{
-                width: '100%',
-              }}
-              placeholder="https://..."
-              label="ссылка на github"
-              value={project.githubURL}
-              onChange={(e) => handleChangeURL('githubURL', e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <TextField
-              multiline
-              sx={{
-                width: '100%',
-              }}
-              placeholder="https://..."
-              label="ссылка на проект"
-              value={project.projectURL}
-              onChange={(e) => handleChangeURL('projectURL', e.target.value)}
-            />
-          </CardContent>
+
+          <ProjectTextFields
+            project={project}
+            handleChangeWithLang={handleChangeWithLang}
+            handleChangeURL={handleChangeURL}
+          />
+
           <CardContent>
             <FormControl sx={{ width: '100%' }}>
               <InputLabel id="multiple-chip-label">Tags</InputLabel>
@@ -216,28 +138,29 @@ function ProjectPage() {
                 multiple
                 onChange={(e: SelectChangeEvent<string[]>) => (
                   handleChangeTag(e.target.value as string[]))}
-                value={project.tags.map((tag) => tagsDictionary[tag])}
+                value={selectedTags}
                 input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
+                    { selected.map((value) => (
                       <Chip key={nanoid()} label={value} />
-                    ))}
+                    )) }
                   </Box>
                 )}
               >
-                {Object.entries(tagsDictionary).map(([tagId, tag]) => (
-                  <MenuItem
-                    key={tagId}
-                    value={tag}
-                  >
-                    {tag}
-                  </MenuItem>
-                ))}
+                { Object.entries(tagsDictionary).map(([tagId, tag]) => (
+                  <MenuItem key={tagId} value={tag}>{ tag }</MenuItem>
+                )) }
               </Select>
             </FormControl>
           </CardContent>
-          <ImagePicker setImage={setImage} defaultImage={EmptyImage} image={image} description="Изображение проекта" />
+
+          <ImagePicker
+            setImage={setImage}
+            defaultImage={EmptyImage}
+            image={image}
+            description="Изображение проекта"
+          />
         </Card>
         <Box sx={{
           display: 'flex',
@@ -254,14 +177,14 @@ function ProjectPage() {
                     navigate('../projects');
                   });
               } else {
-                // TODO fix id || ''
-                updateProject([id || '', project, image])
+                if (!id) return;
+                updateProject([id, project, image])
                   .then(() => alert('Проект сохранен успешно'))
                   .catch((err) => alert(`Ошибка сохранения: ${err}`));
               }
             }}
           >
-            {isNew ? 'Добавить' : 'Сохранить'}
+            { isNew ? 'Добавить' : 'Сохранить' }
           </Button>
         </Box>
       </Container>
