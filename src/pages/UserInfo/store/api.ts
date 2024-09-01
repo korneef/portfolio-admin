@@ -1,13 +1,13 @@
 import {
   child, get, ref, set,
 } from 'firebase/database';
-import { queryApi } from './queryApi';
+import { queryApi } from '../../../app/store/slices/queryApi';
 import {
   db, dbRef, getDownloadURL, storage, storageRef, uploadString,
-} from '../../firebase/firebase';
+} from '../../../app/firebase/firebase';
 import IUserInfo from '../../../models/userInfoModel';
 
-const userInfoApi = queryApi.injectEndpoints({
+const api = queryApi.injectEndpoints({
   endpoints: (build) => ({
     getUserInfo: build.query({
       async queryFn() {
@@ -25,7 +25,6 @@ const userInfoApi = queryApi.injectEndpoints({
           console.log(image);
           const snapshot = await get(child(dbRef, '/userInfo'));
           if (snapshot.exists()) {
-            // return { data: snapshot.val() as IUserInfo, isError: false };
             return {
               data: {
                 user: snapshot.val() as IUserInfo,
@@ -64,4 +63,4 @@ const userInfoApi = queryApi.injectEndpoints({
 export const {
   useGetUserInfoQuery,
   useUpdateUserInfoMutation,
-} = userInfoApi;
+} = api;

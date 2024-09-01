@@ -12,7 +12,7 @@ import MultiLineInput from '../../feautures/MultiLineInput/MultiLineInput';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
 import IUserInfo from '../../models/userInfoModel';
 import ILangModel from '../../models/langModel';
-import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../app/store/slices/userInfoApi';
+import { useGetUserInfoQuery, useUpdateUserInfoMutation } from './store/api';
 import ImagePicker from '../../widgets/ImageContainer/ImagePicker';
 import EmptyImage from '../../share/assets/images/no-photo-icon.png';
 
