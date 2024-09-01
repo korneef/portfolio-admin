@@ -11,21 +11,20 @@ function transformObjectToArray(inputObject: IUserInfo) {
   const resultArray: IResultObj[] = [];
   if (inputObject === null) return resultArray;
 
-  // eslint-disable-next-line guard-for-in,no-restricted-syntax
-  for (const fieldKey in inputObject) {
-    if (fieldKey in inputObject) {
-      const field = fieldKey as keyof IUserInfo;
+  Object.keys(inputObject).forEach((key) => {
+    if (key in inputObject) {
+      const field = key as keyof IUserInfo;
       const userField = inputObject[field as keyof IUserInfo];
-      // eslint-disable-next-line guard-for-in,no-restricted-syntax
-      for (const languageKey in userField) {
+
+      Object.keys(userField).forEach((languageKey) => {
         if (languageKey in userField) {
           const language = languageKey as keyof ILangModel;
           const value = userField[language as keyof typeof userField];
           resultArray.push({ field, language, value });
         }
-      }
+      });
     }
-  }
+  });
   return resultArray;
 }
 
