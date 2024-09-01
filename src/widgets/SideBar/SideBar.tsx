@@ -7,8 +7,9 @@ import {
   Drawer,
   Divider,
 } from '@mui/material';
-import UserPanel from 'feautures/UserPanel/UserPanel';
 import { useNavigate } from 'react-router';
+
+import UserPanel from 'features/UserPanel/UserPanel';
 
 interface Props {
   drawerWidth: number;

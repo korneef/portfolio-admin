@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 
 import { useGetTagsQuery } from '../../app/store/slices/queryApi';
-import AddNewTagModal from '../../feautures/AddNewTagModal/AddNewTagModal';
-import TagCell from '../../feautures/TagCell/TagCell';
+import AddNewTagModal from '../../features/AddNewTagModal/AddNewTagModal';
+import TagCell from '../../features/TagCell/TagCell';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
 
 function Dictionaries() {
