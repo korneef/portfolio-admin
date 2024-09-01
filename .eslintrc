@@ -2,12 +2,14 @@
   "extends": [
     "airbnb",
     "airbnb-typescript",
-    "airbnb/hooks"
+    "airbnb/hooks",
+    "prettier"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
   "rules": {
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "object-curly-newline": "off"
   }
 }
