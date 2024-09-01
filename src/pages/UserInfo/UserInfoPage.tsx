@@ -3,18 +3,18 @@ import {
   Card, CardHeader,
   Container, IconButton,
 } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Unstable_Grid2';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
-import SingleLineInput from '../../feautures/SingleLineInput/SingleLineInput';
-import MultiLineInput from '../../feautures/MultiLineInput/MultiLineInput';
-import PageLoader from '../../widgets/PageLoader/PageLoader';
-import IUserInfo from '../../models/userInfoModel';
-import ILangModel from '../../models/langModel';
+import SingleLineInput from 'shared/ui/SingleLineInput/SingleLineInput';
+import MultiLineInput from 'shared/ui/MultiLineInput/MultiLineInput';
+import EmptyImage from 'shared/assets/images/no-photo-icon.png';
+import IUserInfo from 'models/userInfoModel';
+import ILangModel from 'models/langModel';
+import PageLoader from 'widgets/PageLoader/PageLoader';
+import ImagePicker from 'widgets/ImageContainer/ImagePicker';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from './store/api';
-import ImagePicker from '../../widgets/ImageContainer/ImagePicker';
-import EmptyImage from '../../share/assets/images/no-photo-icon.png';
 
 // TODO refactor this component
 

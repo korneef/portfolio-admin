@@ -18,6 +18,9 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { nanoid } from '@reduxjs/toolkit';
+import EmptyImage from 'shared/assets/images/no-photo-icon.png';
+import PageLoader from 'widgets/PageLoader/PageLoader';
+import ImagePicker from 'widgets/ImageContainer/ImagePicker';
 import IProject from '../../models/projectModel';
 import ILangModel from '../../models/langModel';
 import {
@@ -26,9 +29,6 @@ import {
   useGetTagsQuery,
   useUpdateProjectMutation,
 } from '../../app/store/slices/queryApi';
-import EmptyImage from '../../share/assets/images/no-photo-icon.png';
-import PageLoader from '../../widgets/PageLoader/PageLoader';
-import ImagePicker from '../../widgets/ImageContainer/ImagePicker';
 import ProjectTextFields from './components/ProjectTextFields';
 import DEFAULT_PROJECT_VALUES from './constants';
 
