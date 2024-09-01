@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
-import {
-  Box, Avatar, Typography, IconButton,
-} from '@mui/material';
+
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Box, Avatar, Typography, IconButton } from '@mui/material';
 import { signOut } from 'firebase/auth';
-import { UserContext } from '../../app/providers/userProvider/userProvider';
+
 import { auth } from '../../app/firebase/firebase';
+import { UserContext } from '../../app/providers/userProvider/userProvider';
 
 function UserPanel() {
   const { user, deleteUser } = useContext(UserContext);
 
-  const photoURL = user?.photoURL === null || user === null ? undefined : user.photoURL;
+  const photoURL =
+    user?.photoURL === null || user === null ? undefined : user.photoURL;
 
   return (
     <Box
@@ -21,10 +22,11 @@ function UserPanel() {
       maxWidth="270px"
     >
       <Avatar src={photoURL} />
-      <Typography margin={1}>{ user?.displayName }</Typography>
-      <IconButton onClick={() => {
-        signOut(auth).then(() => deleteUser());
-      }}
+      <Typography margin={1}>{user?.displayName}</Typography>
+      <IconButton
+        onClick={() => {
+          signOut(auth).then(() => deleteUser());
+        }}
       >
         <LogoutIcon />
       </IconButton>

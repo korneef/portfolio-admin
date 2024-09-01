@@ -1,4 +1,5 @@
 import { child, get } from 'firebase/database';
+
 import { dbRef } from './firebase';
 
 function getData(path: string) {
@@ -8,7 +9,8 @@ function getData(path: string) {
         return snapshot.val();
       }
       return null;
-    }).catch(() => null);
+    })
+    .catch(() => null);
 }
 
 export default getData;

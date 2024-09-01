@@ -1,7 +1,8 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import {
-  child, get, push, ref, set, update, remove,
-} from 'firebase/database';
+import { child, get, push, ref, set, update, remove } from 'firebase/database';
+
+import IProject from '../../../models/projectModel';
+import ITagModel from '../../../models/tagModel';
 import {
   db,
   dbRef,
@@ -14,15 +15,12 @@ import {
   uploadBytes,
   deleteObject,
 } from '../../firebase/firebase';
-import IProject from '../../../models/projectModel';
-import ITagModel from '../../../models/tagModel';
 
 // TODO endpoints also should return errors
 export const queryApi = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ['UserInfo', 'Projects', 'OneProject', 'Tags', 'CV'],
   endpoints: (build) => ({
-
     // Endpoints for PROJECTS
 
     getProjects: build.query({
@@ -52,7 +50,10 @@ export const queryApi = createApi({
       async queryFn(projectId: string) {
         try {
           const snapshot = await get(child(dbRef, `projects/${projectId}`));
-          const projectImageRef = storageRef(storage, `projects/${projectId}/projectImage.jpg`);
+          const projectImageRef = storageRef(
+            storage,
+            `projects/${projectId}/projectImage.jpg`
+          );
 
           const image = await getDownloadURL(projectImageRef)
             .then((url) => fetch(url))
@@ -88,7 +89,7 @@ export const queryApi = createApi({
 
           const projectImageRef = storageRef(
             storage,
-            `projects/${newProjectRef.key}/projectImage.jpg`,
+            `projects/${newProjectRef.key}/projectImage.jpg`
           );
 
           await uploadString(projectImageRef, projectImage, 'data_url');
@@ -106,7 +107,10 @@ export const queryApi = createApi({
       async queryFn(arg: [string, IProject, string]) {
         const [projectId, project, projectImage] = arg;
         const projectsRef = ref(db, '/projects');
-        const projectImageRef = storageRef(storage, `projects/${projectId}/projectImage.jpg`);
+        const projectImageRef = storageRef(
+          storage,
+          `projects/${projectId}/projectImage.jpg`
+        );
         try {
           // const newTagRef = await push(tagsRef);
           await update(projectsRef, { [projectId]: project });
@@ -158,7 +162,7 @@ export const queryApi = createApi({
 
     updateTag: build.mutation({
       // todo add type for these object
-      async queryFn(arg: { key: string, data: string }) {
+      async queryFn(arg: { key: string; data: string }) {
         try {
           // const newTagRef = await push(tagsRef);
           await update(tagsRef, { [arg.key]: arg.data });
@@ -188,7 +192,10 @@ export const queryApi = createApi({
     getCVurl: build.query({
       async queryFn(language: string) {
         try {
-          const cvStorageRef = storageRef(storage, `CVs/${language}/Valentin_Korneev[frontend_developer].pdf`);
+          const cvStorageRef = storageRef(
+            storage,
+            `CVs/${language}/Valentin_Korneev[frontend_developer].pdf`
+          );
           const downloadURL = await getDownloadURL(cvStorageRef);
           return { data: downloadURL, isError: false, isLoading: false };
         } catch (e) {
@@ -199,18 +206,18 @@ export const queryApi = createApi({
     }),
 
     uploadCV: build.mutation({
-      async queryFn(arg: {
-        file: Blob,
-        language: 'ru' | 'en',
-        name: string;
-      }) {
+      async queryFn(arg: { file: Blob; language: 'ru' | 'en'; name: string }) {
         try {
           const cvStorageRef = storageRef(
             storage,
-            `CVs/${arg.language}/${arg.name}.pdf`,
+            `CVs/${arg.language}/${arg.name}.pdf`
           );
           const newFile = await uploadBytes(cvStorageRef, arg.file);
-          return { data: newFile.metadata.name, isError: false, isLoading: false };
+          return {
+            data: newFile.metadata.name,
+            isError: false,
+            isLoading: false,
+          };
         } catch (e) {
           return { data: null, isError: true, isLoading: false };
         }
@@ -219,14 +226,11 @@ export const queryApi = createApi({
     }),
 
     deleteCV: build.mutation({
-      async queryFn(arg: {
-        language: 'ru' | 'en',
-        name: string;
-      }) {
+      async queryFn(arg: { language: 'ru' | 'en'; name: string }) {
         try {
           const cvStorageRef = storageRef(
             storage,
-            `CVs/${arg.language}/${arg.name}.pdf`,
+            `CVs/${arg.language}/${arg.name}.pdf`
           );
           await deleteObject(cvStorageRef);
           return { data: true, isError: false, isLoading: false };

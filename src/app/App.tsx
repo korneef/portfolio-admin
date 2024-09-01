@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
-import './App.scss';
-import { useLocation, useNavigate } from 'react-router';
-import UserProvider from './providers/userProvider/userProvider';
+
 import '@mui/material';
+import { useLocation, useNavigate } from 'react-router';
+
 import AppRoutes from './AppRoutes';
+import UserProvider from './providers/userProvider/userProvider';
+
+import './App.scss';
 
 function App() {
   const navigate = useNavigate();

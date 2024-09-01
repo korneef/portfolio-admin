@@ -1,20 +1,20 @@
-import React, {
-  createContext, useEffect, useMemo, useState,
-} from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
+
 import { Box } from '@mui/material';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
 import PageLoader from '../../../widgets/PageLoader/PageLoader';
 
 interface IUser {
-  displayName: string | null,
-  email: string | null,
-  photoURL: string | null,
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
 }
 
 interface IUserContext {
-  user: IUser | null,
-  addUser: (addUser: IUser) => void,
-  deleteUser: () => void,
+  user: IUser | null;
+  addUser: (addUser: IUser) => void;
+  deleteUser: () => void;
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -52,27 +52,32 @@ function UserProvider({ children }: React.PropsWithChildren) {
     setUser(null);
   };
 
-  const value = useMemo(() => ({
-    user,
-    addUser,
-    deleteUser,
-  }), [user]);
+  const value = useMemo(
+    () => ({
+      user,
+      addUser,
+      deleteUser,
+    }),
+    [user]
+  );
 
   return (
     <UserContext.Provider value={value}>
       {isLoading ? (
-        <Box sx={{
-          width: '100%',
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-
-        }}
+        <Box
+          sx={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
           <PageLoader />
         </Box>
-      ) : children}
+      ) : (
+        children
+      )}
     </UserContext.Provider>
   );
 }

@@ -1,10 +1,14 @@
+import { child, get, ref, set } from 'firebase/database';
+
 import {
-  child, get, ref, set,
-} from 'firebase/database';
-import { queryApi } from '../../../app/store/slices/queryApi';
-import {
-  db, dbRef, getDownloadURL, storage, storageRef, uploadString,
+  db,
+  dbRef,
+  getDownloadURL,
+  storage,
+  storageRef,
+  uploadString,
 } from '../../../app/firebase/firebase';
+import { queryApi } from '../../../app/store/slices/queryApi';
 import IUserInfo from '../../../models/userInfoModel';
 
 const api = queryApi.injectEndpoints({
@@ -60,7 +64,4 @@ const api = queryApi.injectEndpoints({
   }),
 });
 
-export const {
-  useGetUserInfoQuery,
-  useUpdateUserInfoMutation,
-} = api;
+export const { useGetUserInfoQuery, useUpdateUserInfoMutation } = api;

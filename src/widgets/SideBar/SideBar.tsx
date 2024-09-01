@@ -1,12 +1,17 @@
 import React from 'react';
+
 import {
-  List, ListItemButton, ListItemText, Drawer, Divider,
+  List,
+  ListItemButton,
+  ListItemText,
+  Drawer,
+  Divider,
 } from '@mui/material';
 import UserPanel from 'feautures/UserPanel/UserPanel';
 import { useNavigate } from 'react-router';
 
 interface Props {
-  drawerWidth: number,
+  drawerWidth: number;
 }
 
 function SideBar({ drawerWidth }: Props) {
@@ -36,7 +41,10 @@ function SideBar({ drawerWidth }: Props) {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItemButton key={item.displayName} onClick={() => handleClick(item.navTo)}>
+          <ListItemButton
+            key={item.displayName}
+            onClick={() => handleClick(item.navTo)}
+          >
             <ListItemText primary={item.displayName} />
           </ListItemButton>
         ))}

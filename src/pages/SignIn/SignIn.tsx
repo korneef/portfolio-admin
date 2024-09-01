@@ -1,12 +1,14 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  signInWithPopup, GoogleAuthProvider,
-} from 'firebase/auth';
-import { auth } from 'app/firebase/firebase';
+
 import { Button } from '@mui/material';
-import './SignIn.scss';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useNavigate } from 'react-router';
+
+import { auth } from 'app/firebase/firebase';
+
 import { UserContext } from '../../app/providers/userProvider/userProvider';
+
+import './SignIn.scss';
 
 export default function SignIn() {
   const user = useContext(UserContext);
@@ -18,15 +20,14 @@ export default function SignIn() {
       .then((result) => {
         const autorizedUser = result.user;
 
-        user.addUser(
-          {
-            displayName: autorizedUser.displayName,
-            email: autorizedUser.email,
-            photoURL: autorizedUser.photoURL,
-          },
-        );
+        user.addUser({
+          displayName: autorizedUser.displayName,
+          email: autorizedUser.email,
+          photoURL: autorizedUser.photoURL,
+        });
         navigate('/panel/user-info');
-      }).catch(() => {
+      })
+      .catch(() => {
         // TODO add error case
       });
   };
@@ -37,7 +38,9 @@ export default function SignIn() {
 
   return (
     <div className="sign-in">
-      <Button variant="contained" onClick={handleLogin}>Авторизация</Button>
+      <Button variant="contained" onClick={handleLogin}>
+        Авторизация
+      </Button>
     </div>
   );
 }

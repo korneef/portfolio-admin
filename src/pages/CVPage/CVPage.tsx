@@ -1,10 +1,20 @@
 import React from 'react';
-import {
-  Button, Container, Link, TableBody, TableCell, TableRow,
-} from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { useUploadCVMutation, useGetCVurlQuery, useDeleteCVMutation } from '../../app/store/slices/queryApi';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {
+  Button,
+  Container,
+  Link,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '@mui/material';
+
+import {
+  useUploadCVMutation,
+  useGetCVurlQuery,
+  useDeleteCVMutation,
+} from '../../app/store/slices/queryApi';
 
 function CvPage() {
   const [uploadCV] = useUploadCVMutation();
@@ -14,7 +24,10 @@ function CvPage() {
   const { data: enCvUrl } = useGetCVurlQuery('en');
 
   // todo move language to type
-  const handleInputChange = async (evt: React.ChangeEvent<HTMLInputElement>, language: 'ru' | 'en') => {
+  const handleInputChange = async (
+    evt: React.ChangeEvent<HTMLInputElement>,
+    language: 'ru' | 'en'
+  ) => {
     if (evt.target.files === null) return;
 
     const cvFile = evt.target.files[0];
@@ -26,14 +39,18 @@ function CvPage() {
       name: 'Valentin_Korneev[frontend_developer]',
     });
   };
-  const withoutFile = (<div>Резюме не загружено</div>);
+  const withoutFile = <div>Резюме не загружено</div>;
 
   return (
     <Container>
       <TableBody>
         <TableRow>
           <TableCell>
-            {ruCvUrl ? <Link href={ruCvUrl}>Резюме на русском</Link> : withoutFile}
+            {ruCvUrl ? (
+              <Link href={ruCvUrl}>Резюме на русском</Link>
+            ) : (
+              withoutFile
+            )}
           </TableCell>
           <TableCell>
             <Button
@@ -54,10 +71,12 @@ function CvPage() {
             <Button
               variant="contained"
               component="label"
-              onClick={() => deleteCV(({
-                language: 'ru',
-                name: 'Valentin_Korneev[frontend_developer]',
-              }))}
+              onClick={() =>
+                deleteCV({
+                  language: 'ru',
+                  name: 'Valentin_Korneev[frontend_developer]',
+                })
+              }
             >
               Delete CV
             </Button>
@@ -66,7 +85,11 @@ function CvPage() {
 
         <TableRow>
           <TableCell>
-            {enCvUrl ? <Link href={enCvUrl}>Резюме на английском</Link> : withoutFile}
+            {enCvUrl ? (
+              <Link href={enCvUrl}>Резюме на английском</Link>
+            ) : (
+              withoutFile
+            )}
           </TableCell>
           <TableCell>
             <Button
@@ -87,17 +110,18 @@ function CvPage() {
             <Button
               variant="contained"
               component="label"
-              onClick={() => deleteCV(({
-                language: 'en',
-                name: 'Valentin_Korneev[frontend_developer]',
-              }))}
+              onClick={() =>
+                deleteCV({
+                  language: 'en',
+                  name: 'Valentin_Korneev[frontend_developer]',
+                })
+              }
             >
               Delete CV
             </Button>
           </TableCell>
         </TableRow>
       </TableBody>
-
     </Container>
   );
 }

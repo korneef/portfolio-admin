@@ -1,7 +1,9 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import SideBar from 'widgets/SideBar/SideBar';
+
 import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+
+import SideBar from 'widgets/SideBar/SideBar';
 
 function LeftMenuLayout() {
   const drawerWidth = 300;

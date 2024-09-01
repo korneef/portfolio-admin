@@ -1,25 +1,27 @@
 import React, { useRef } from 'react';
-import {
-  Box, Card, CardContent, CardHeader, CardMedia, IconButton,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  IconButton,
+} from '@mui/material';
+
 import './ImagePicker.scss';
 
 interface Props {
-  image: string,
-  setImage: (image: string) => void,
-  defaultImage: string,
-  description?: string,
+  image: string;
+  setImage: (image: string) => void;
+  defaultImage: string;
+  description?: string;
 }
 
 function ImagePicker(props: Props) {
-  const {
-    image,
-    setImage,
-    defaultImage,
-    description = 'Изображение',
-  } = props;
+  const { image, setImage, defaultImage, description = 'Изображение' } = props;
   const fileInput = useRef<HTMLInputElement | null>(null);
 
   const cn = 'image-picker';
@@ -58,7 +60,7 @@ function ImagePicker(props: Props) {
       <Card className={cn} sx={{ width: '300px' }}>
         <CardHeader
           subheader={description}
-          action={(
+          action={
             <Box className={`${cn}__buttons-wrapper`}>
               <IconButton
                 onClick={handleChangeImage}
@@ -73,14 +75,10 @@ function ImagePicker(props: Props) {
                 <DeleteForeverIcon />
               </IconButton>
             </Box>
-          )}
+          }
         />
 
-        <CardMedia
-          component="img"
-          alt="изображение проекта"
-          image={image}
-        />
+        <CardMedia component="img" alt="изображение проекта" image={image} />
       </Card>
       <input
         type="file"

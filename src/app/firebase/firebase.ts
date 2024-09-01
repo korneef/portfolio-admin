@@ -1,11 +1,11 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getDatabase, ref } from 'firebase/database';
 import {
-  getDatabase, ref,
-} from 'firebase/database';
-import {
-  getStorage, ref as storageRef,
-  uploadString, getDownloadURL,
+  getStorage,
+  ref as storageRef,
+  uploadString,
+  getDownloadURL,
   uploadBytes,
   getMetadata,
   deleteObject,

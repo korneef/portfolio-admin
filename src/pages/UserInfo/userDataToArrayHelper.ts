@@ -1,10 +1,10 @@
-import IUserInfo from '../../models/userInfoModel';
 import ILangModel from '../../models/langModel';
+import IUserInfo from '../../models/userInfoModel';
 
 interface IResultObj {
-  language: keyof ILangModel,
-  field: keyof IUserInfo,
-  value: string,
+  language: keyof ILangModel;
+  field: keyof IUserInfo;
+  value: string;
 }
 
 function transformObjectToArray(inputObject: IUserInfo) {

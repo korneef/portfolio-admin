@@ -1,18 +1,23 @@
 import React from 'react';
+
 import { CardContent, TextField } from '@mui/material';
-import IProject from '../../../models/projectModel';
+
 import ILangModel from '../../../models/langModel';
+import IProject from '../../../models/projectModel';
 
 interface ProjectTextFieldsProps {
   project: IProject;
-  handleChangeWithLang: <T extends keyof Pick<IProject, 'name' | 'description'>, U extends keyof ILangModel>(
+  handleChangeWithLang: <
+    T extends keyof Pick<IProject, 'name' | 'description'>,
+    U extends keyof ILangModel,
+  >(
     field: T,
     language: U,
-    value: string,
+    value: string
   ) => void;
   handleChangeURL: <T extends keyof Pick<IProject, 'githubURL' | 'projectURL'>>(
     field: T,
-    value: string,
+    value: string
   ) => void;
 }
 
@@ -20,8 +25,7 @@ function ProjectTextFields({
   project,
   handleChangeWithLang,
   handleChangeURL,
-}:
-ProjectTextFieldsProps) {
+}: ProjectTextFieldsProps) {
   const textFieldStyle = { width: '100%' };
 
   return (
@@ -53,7 +57,9 @@ ProjectTextFieldsProps) {
           placeholder="Проект создан с целью..."
           label="Описание проекта на русском"
           value={project.description.ru}
-          onChange={(e) => handleChangeWithLang('description', 'ru', e.target.value)}
+          onChange={(e) =>
+            handleChangeWithLang('description', 'ru', e.target.value)
+          }
         />
       </CardContent>
 
@@ -64,7 +70,9 @@ ProjectTextFieldsProps) {
           placeholder="This project can be..."
           label="Описание проекта на английском"
           value={project.description.en}
-          onChange={(e) => handleChangeWithLang('description', 'en', e.target.value)}
+          onChange={(e) =>
+            handleChangeWithLang('description', 'en', e.target.value)
+          }
         />
       </CardContent>
 

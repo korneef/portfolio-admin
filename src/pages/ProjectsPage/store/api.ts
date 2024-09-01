@@ -1,8 +1,7 @@
 import { get } from 'firebase/database';
 
-import { queryApi } from '../../../app/store/slices/queryApi';
 import { projectRef } from '../../../app/firebase/firebase';
-
+import { queryApi } from '../../../app/store/slices/queryApi';
 import IProject from '../../../models/projectModel';
 
 const api = queryApi.injectEndpoints({

@@ -1,8 +1,9 @@
 import React from 'react';
+
 import { Box, TextField } from '@mui/material';
 
-import IUserInfo from 'models/userInfoModel';
 import ILangModel from 'models/langModel';
+import IUserInfo from 'models/userInfoModel';
 
 interface Props {
   value: string;
@@ -11,14 +12,19 @@ interface Props {
     field: T,
     language: U,
     value: string
-  ) => void,
-  field: keyof IUserInfo,
-  language: keyof ILangModel,
-  disabled: boolean
+  ) => void;
+  field: keyof IUserInfo;
+  language: keyof ILangModel;
+  disabled: boolean;
 }
 
 function MultiLineInput({
-  handleChange, placeholder, value, field, language, disabled,
+  handleChange,
+  placeholder,
+  value,
+  field,
+  language,
+  disabled,
 }: Props) {
   return (
     <Box

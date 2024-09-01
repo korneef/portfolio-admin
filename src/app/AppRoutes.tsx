@@ -1,19 +1,22 @@
-import { Route, Routes } from 'react-router';
 import React from 'react';
-import PrivateRoute from './providers/privateRouteProvider/PrivateRoute';
+
+import { Route, Routes } from 'react-router';
+
 import LeftMenuLayout from '../layouts/LeftMenuLayout/LeftMenuLayout';
-import UserInfoPage from '../pages/UserInfo/UserInfoPage';
 import CVPage from '../pages/CVPage/CVPage';
-import PhotosPage from '../pages/Photos/PhotosPage';
-import ProjectsPage from '../pages/ProjectsPage/ProjectsPage';
-import ProjectPage from '../pages/ProjectPage/ProjectPage';
 import Dictionaries from '../pages/Dictionaries/Dictionaries';
+import PhotosPage from '../pages/Photos/PhotosPage';
+import ProjectPage from '../pages/ProjectPage/ProjectPage';
+import ProjectsPage from '../pages/ProjectsPage/ProjectsPage';
 import SignIn from '../pages/SignIn/SignIn';
+import UserInfoPage from '../pages/UserInfo/UserInfoPage';
+
+import PrivateRoute from './providers/privateRouteProvider/PrivateRoute';
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* private routes */ }
+      {/* private routes */}
       <Route path="/" element={<PrivateRoute />}>
         <Route path="panel" element={<LeftMenuLayout />}>
           <Route index path="user-info" element={<UserInfoPage />} />
@@ -25,7 +28,7 @@ function AppRoutes() {
         </Route>
       </Route>
 
-      {/* public routes */ }
+      {/* public routes */}
       <Route path="/login" element={<SignIn />} />
       <Route path="/*" element={<div>not found</div>} />
     </Routes>

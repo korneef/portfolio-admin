@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Button,
@@ -6,15 +7,16 @@ import {
   Paper,
   Table,
   TableBody,
-  TableCell, TableContainer,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
 } from '@mui/material';
 
-import TagCell from '../../feautures/TagCell/TagCell';
 import { useGetTagsQuery } from '../../app/store/slices/queryApi';
-import PageLoader from '../../widgets/PageLoader/PageLoader';
 import AddNewTagModal from '../../feautures/AddNewTagModal/AddNewTagModal';
+import TagCell from '../../feautures/TagCell/TagCell';
+import PageLoader from '../../widgets/PageLoader/PageLoader';
 
 function Dictionaries() {
   const { data: tags = [], isLoading } = useGetTagsQuery({});
@@ -25,7 +27,9 @@ function Dictionaries() {
 
   const handleClose = () => setOpen(false);
 
-  return isLoading ? (<PageLoader />) : (
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <Container sx={{ paddingTop: 5 }}>
       <TableContainer component={Paper}>
         <Table aria-label="tags table" size="small">
@@ -36,27 +40,24 @@ function Dictionaries() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tags.map((row) => (<TagCell key={row.id} id={row.id} tag={row.tag} />))}
+            {tags.map((row) => (
+              <TagCell key={row.id} id={row.id} tag={row.tag} />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <Box sx={{
-        paddingTop: 1,
-        display: 'flex',
-        justifyContent: 'flex-end',
-      }}
+      <Box
+        sx={{
+          paddingTop: 1,
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
       >
-        <Button
-          variant="contained"
-          onClick={handleOpen}
-        >
+        <Button variant="contained" onClick={handleOpen}>
           Добавить
         </Button>
-        <AddNewTagModal
-          open={open}
-          handleClose={handleClose}
-        />
+        <AddNewTagModal open={open} handleClose={handleClose} />
       </Box>
     </Container>
   );

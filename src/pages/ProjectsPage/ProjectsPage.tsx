@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+
+import EditIcon from '@mui/icons-material/Edit';
 import {
   Container,
   Paper,
@@ -12,12 +14,16 @@ import {
   Box,
   Chip,
   Stack,
-  IconButton, Typography,
+  IconButton,
+  Typography,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router';
+
+import {
+  useGetProjectsQuery,
+  useGetTagsQuery,
+} from '../../app/store/slices/queryApi';
 import PageLoader from '../../widgets/PageLoader/PageLoader';
-import { useGetProjectsQuery, useGetTagsQuery } from '../../app/store/slices/queryApi';
 
 function ProjectsPage() {
   const navigate = useNavigate();
@@ -36,7 +42,9 @@ function ProjectsPage() {
     return dictionary;
   }, [tags]);
 
-  return isLoading ? (<PageLoader />) : (
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <Container sx={{ paddingTop: 5 }}>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
@@ -57,11 +65,15 @@ function ProjectsPage() {
                 <TableCell component="th" scope="row">
                   <Stack>
                     <Box>
-                      <Typography color="gray" fontSize={12}>ru</Typography>
+                      <Typography color="gray" fontSize={12}>
+                        ru
+                      </Typography>
                       {row.name.ru}
                     </Box>
                     <Box>
-                      <Typography color="gray" fontSize={12}>en</Typography>
+                      <Typography color="gray" fontSize={12}>
+                        en
+                      </Typography>
                       {row.name.en}
                     </Box>
                   </Stack>
@@ -69,22 +81,25 @@ function ProjectsPage() {
                 <TableCell>
                   <Stack>
                     <Box>
-                      <Typography color="gray" fontSize={12}>ru</Typography>
+                      <Typography color="gray" fontSize={12}>
+                        ru
+                      </Typography>
                       {row.description.ru}
                     </Box>
                     <Box>
-                      <Typography color="gray" fontSize={12}>en</Typography>
+                      <Typography color="gray" fontSize={12}>
+                        en
+                      </Typography>
                       {row.description.en}
                     </Box>
                   </Stack>
                 </TableCell>
                 <TableCell>
                   <Stack spacing={1} direction="row" flexWrap="wrap" useFlexGap>
-                    {
-                      row.tags.map((item) => <Chip key={item} label={tagsDictionary[item]} />)
-                    }
+                    {row.tags.map((item) => (
+                      <Chip key={item} label={tagsDictionary[item]} />
+                    ))}
                   </Stack>
-
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => navigate(row.id)}>
@@ -96,16 +111,14 @@ function ProjectsPage() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{
-        marginTop: 2,
-        display: 'flex',
-        justifyContent: 'flex-end',
-      }}
+      <Box
+        sx={{
+          marginTop: 2,
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
       >
-        <Button
-          variant="contained"
-          onClick={() => navigate('new')}
-        >
+        <Button variant="contained" onClick={() => navigate('new')}>
           Добавить проект
         </Button>
       </Box>

@@ -1,6 +1,6 @@
 interface ILangModel {
-  ru: string,
-  en: string,
+  ru: string;
+  en: string;
 }
 
 export default ILangModel;

@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import {
-  IconButton, TableCell, TableRow, TextField,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DoneIcon from '@mui/icons-material/Done';
+
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useUpdateTagMutation, useRemoveTagMutation } from '../../app/store/slices/queryApi';
+import DoneIcon from '@mui/icons-material/Done';
+import EditIcon from '@mui/icons-material/Edit';
+import { IconButton, TableCell, TableRow, TextField } from '@mui/material';
+
+import {
+  useUpdateTagMutation,
+  useRemoveTagMutation,
+} from '../../app/store/slices/queryApi';
 
 interface Props {
-  tag: string,
-  id: string,
+  tag: string;
+  id: string;
 }
 
 function TagCell({ tag, id }: Props) {
@@ -39,16 +42,16 @@ function TagCell({ tag, id }: Props) {
     <>
       <IconButton
         onClick={() => {
-          updateTag({ key: id, data: value })
-            .then(() => setIsEdit(false));
+          updateTag({ key: id, data: value }).then(() => setIsEdit(false));
         }}
       >
         <DoneIcon />
       </IconButton>
-      <IconButton onClick={() => {
-        setIsEdit(false);
-        setValue(tag);
-      }}
+      <IconButton
+        onClick={() => {
+          setIsEdit(false);
+          setValue(tag);
+        }}
       >
         <CancelIcon />
       </IconButton>
@@ -56,9 +59,7 @@ function TagCell({ tag, id }: Props) {
   );
 
   return (
-    <TableRow
-      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    >
+    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell>
         <TextField
           disabled={!isEdit}
