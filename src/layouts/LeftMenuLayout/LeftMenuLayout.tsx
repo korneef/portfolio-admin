@@ -6,18 +6,12 @@ import { Outlet } from 'react-router-dom';
 import SideBar from 'widgets/SideBar/SideBar';
 
 function LeftMenuLayout() {
-  const drawerWidth = 300;
-
   return (
     <Box sx={{ display: 'flex' }}>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="navigation menu"
-      >
-        <SideBar drawerWidth={drawerWidth} />
+      <Box component="nav" aria-label="navigation menu">
+        <SideBar />
       </Box>
-      <Box width="100%" margin={2}>
+      <Box margin={2} flexGrow={1}>
         <Outlet />
       </Box>
     </Box>

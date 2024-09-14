@@ -1,56 +1,58 @@
 import React from 'react';
 
-import {
-  List,
-  ListItemButton,
-  ListItemText,
-  Drawer,
-  Divider,
-} from '@mui/material';
-import { useNavigate } from 'react-router';
+import { KeyboardDoubleArrowLeft } from '@mui/icons-material';
+import { Button, Divider, Drawer, List } from '@mui/material';
 
 import UserPanel from 'features/UserPanel/UserPanel';
 
-interface Props {
-  drawerWidth: number;
-}
+import NavListItem from './components/NavListItem';
+import SidebarOpenButton from './components/SidebarOpenButton';
+import navItems from './constants';
 
-function SideBar({ drawerWidth }: Props) {
-  const navigate = useNavigate();
+function SideBar() {
+  const [show, setShow] = React.useState({ manually: false, auto: false });
+  const showMenu = show.auto || show.manually;
 
-  // TODO refactor this. Extract navItems and create navList component (widget)
-
-  const navItems = [
-    { displayName: 'Основная информация', navTo: 'user-info' },
-    { displayName: 'Проекты', navTo: 'projects' },
-    { displayName: 'Фотографии', navTo: 'photos' },
-    { displayName: 'Справочники', navTo: 'dictionaries' },
-    { displayName: 'Резюме', navTo: 'cv' },
-  ];
-
-  const handleClick = (navTo: string) => navigate(`/panel/${navTo}`);
+  const handleMouseLeave = () =>
+    setShow((prevState) => ({ ...prevState, auto: false }));
+  const handleClose = () => setShow({ manually: false, auto: false });
 
   return (
-    <Drawer
-      sx={{
-        display: { xs: 'none', sm: 'block' },
-        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-      }}
-      variant="permanent"
-    >
-      <UserPanel />
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItemButton
-            key={item.displayName}
-            onClick={() => handleClick(item.navTo)}
-          >
-            <ListItemText primary={item.displayName} />
-          </ListItemButton>
-        ))}
-      </List>
-    </Drawer>
+    <>
+      <SidebarOpenButton showMenu={showMenu} setShow={setShow} />
+
+      <Drawer
+        variant="persistent"
+        open={showMenu}
+        sx={{
+          width: show.manually ? 300 : 0,
+          '& .MuiDrawer-paper': {
+            width: 300,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+          },
+          transition: 'width 200ms ease',
+        }}
+        onMouseLeave={handleMouseLeave}
+      >
+        <Button variant="text" onClick={handleClose}>
+          <KeyboardDoubleArrowLeft />
+        </Button>
+
+        <Divider />
+
+        <List sx={{ flexGrow: 1 }}>
+          {navItems.map((item) => (
+            <NavListItem key={item.displayName} item={item} />
+          ))}
+        </List>
+
+        <Divider />
+
+        <UserPanel />
+      </Drawer>
+    </>
   );
 }
 
