@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { Button, Divider, Drawer, List } from '@mui/material';
 
 import UserPanel from 'features/UserPanel/UserPanel';
+
+import LocalStorageService from '../../shared/utils/localStorageService';
 
 import NavListItem from './components/NavListItem';
 import SidebarOpenButton from './components/SidebarOpenButton';
@@ -15,7 +17,16 @@ function SideBar() {
 
   const handleMouseLeave = () =>
     setShow((prevState) => ({ ...prevState, auto: false }));
-  const handleClose = () => setShow({ manually: false, auto: false });
+
+  const handleClose = () => {
+    setShow({ manually: false, auto: false });
+    LocalStorageService.setItem('showSidebar', false);
+  };
+
+  useEffect(() => {
+    const showSidebar = LocalStorageService.getItem('showSidebar');
+    setShow({ manually: Boolean(showSidebar), auto: false });
+  }, []);
 
   return (
     <>
