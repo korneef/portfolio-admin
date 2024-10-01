@@ -1,20 +1,14 @@
 import React from 'react';
 
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {
-  Button,
-  Container,
-  Link,
-  TableBody,
-  TableCell,
-  TableRow,
-} from '@mui/material';
+import { Container, TableBody } from '@mui/material';
 
 import {
   useUploadCVMutation,
   useGetCVurlQuery,
   useDeleteCVMutation,
 } from '../../app/store/slices/queryApi';
+
+import CVRow from './CVRow/CVRow';
 
 function CvPage() {
   const [uploadCV] = useUploadCVMutation();
@@ -39,88 +33,28 @@ function CvPage() {
       name: 'Valentin_Korneev[frontend_developer]',
     });
   };
-  const withoutFile = <div>Резюме не загружено</div>;
 
   return (
     <Container>
       <TableBody>
-        <TableRow>
-          <TableCell>
-            {ruCvUrl ? (
-              <Link href={ruCvUrl}>Резюме на русском</Link>
-            ) : (
-              withoutFile
-            )}
-          </TableCell>
-          <TableCell>
-            <Button
-              variant="contained"
-              component="label"
-              startIcon={<CloudUploadIcon />}
-            >
-              Upload Russian CV
-              <input
-                type="file"
-                accept="application/pdf"
-                hidden
-                onChange={(e) => handleInputChange(e, 'ru')}
-              />
-            </Button>
-          </TableCell>
-          <TableCell>
-            <Button
-              variant="contained"
-              component="label"
-              onClick={() =>
-                deleteCV({
-                  language: 'ru',
-                  name: 'Valentin_Korneev[frontend_developer]',
-                })
-              }
-            >
-              Delete CV
-            </Button>
-          </TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell>
-            {enCvUrl ? (
-              <Link href={enCvUrl}>Резюме на английском</Link>
-            ) : (
-              withoutFile
-            )}
-          </TableCell>
-          <TableCell>
-            <Button
-              variant="contained"
-              component="label"
-              startIcon={<CloudUploadIcon />}
-            >
-              Upload English CV
-              <input
-                type="file"
-                accept="application/pdf"
-                hidden
-                onChange={(e) => handleInputChange(e, 'en')}
-              />
-            </Button>
-          </TableCell>
-          <TableCell>
-            <Button
-              variant="contained"
-              component="label"
-              onClick={() =>
-                deleteCV({
-                  language: 'en',
-                  name: 'Valentin_Korneev[frontend_developer]',
-                })
-              }
-            >
-              Delete CV
-            </Button>
-          </TableCell>
-        </TableRow>
+        <CVRow
+          language="ru"
+          CVUrl={ruCvUrl}
+          name="Valentin_Korneev[frontend_developer]"
+          buttonTitle="Upload Russian CV"
+          description="Резюме на русском"
+          handleInputChange={handleInputChange}
+          deleteCV={deleteCV}
+        />
+        <CVRow
+          language="en"
+          CVUrl={enCvUrl}
+          name="Valentin_Korneev[frontend_developer]"
+          buttonTitle="Upload English CV"
+          description="Резюме на английском"
+          handleInputChange={handleInputChange}
+          deleteCV={deleteCV}
+        />
       </TableBody>
     </Container>
   );
